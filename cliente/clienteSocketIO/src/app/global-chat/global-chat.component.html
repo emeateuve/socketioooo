@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <div class="row mt-3 ml-3">
+    <div class="col-8" style="background: rgba(255,255,255,0.5); height: 85vh">
+      <ul id="messages"></ul>
+      <ul>
+        <!--<li *ngFor="let mensaje of conversacion">{{mensaje}}</li>-->
+      </ul>
+    </div>
+    <div class="col-3 ml-5" style="height: 85vh; background: rgba(255,255,255,0.6)">
+    </div>
+  </div>
+  <div class="row ml-3 mt-2">
+    <div class="col-10" style="background: rgba(255,255,255,0.5); height: 6vh">
+      <div class="row mt-2">
+        <div class="col-10 input-group mb-3" style="height: 100%;">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">(USUARIO)</span>
+          </div>
+          <input (keyup)="$event.keyCode == 13 && sendMessage()" [(ngModel)]="message" id="message" type="text" class="form-control" placeholder="Write your message!" aria-label="Username">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-info w-100" (click)="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+        <button style="height: 100%" class="btn-hover color-3" (click)="backToMenu()">Back to menu</button>
+    </div>
+
+  </div>
+</div>
+
