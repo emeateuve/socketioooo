@@ -25,10 +25,10 @@ export class MultiplayerserviceService{
   public successfullLogin = () => {
     return Observable.create((observer) => {
       this.socket.on('successfull-login',(jsonUser) => {
-        // this.connectedUsers = jsonUser.array;
-        // this.user = jsonUser.user;
+        this.connectedUsers = jsonUser.array;
+        this.user = jsonUser.user;
         observer.next(jsonUser);
-        // console.log('USER: ', this.user, 'ARRAY: ',this.connectedUsers);
+        console.log('USER: ', this.user, 'ARRAY: ',this.connectedUsers);
       });
     });
   };

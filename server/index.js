@@ -149,7 +149,6 @@ io.on('connection', function (socket) {
             loggedUsers.push(socket.jsonUser);
             console.log('Usuarios: ', loggedUsers);
             console.log('Se ha conectado: ', socket.jsonUser.username);
-            socket.emit("successfull-login", {array: loggedUsers, user: socket.jsonUser.username});
 
             socket.on("conexion-chat", function () {
                 console.log('Se ha conectado al chat un cliente');
@@ -171,6 +170,8 @@ io.on('connection', function (socket) {
                 }
                 io.emit('hombres-quitados', array)
             });
+            console.log('Antes del successfull',  {array: loggedUsers, user: socket.jsonUser.username})
+            socket.emit("successfull-login", {array: loggedUsers, user: socket.jsonUser.username});
         }
     });
 
