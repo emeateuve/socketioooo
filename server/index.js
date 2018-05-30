@@ -11,6 +11,7 @@ app.use(express.static('public'));
 
 var loggedUsers = [];
 var chatUsers = [];
+var readyUsers = [];
 
 var loggedUser = false;
 
@@ -150,8 +151,10 @@ io.on('connection', function (socket) {
         if(!loggedUser){
             socket.jsonUser = {username: user};
             loggedUsers.push(socket.jsonUser);
-            console.log('Usuarios: ', loggedUsers);
-            console.log('Se ha conectado: ', socket.jsonUser.username);
+            // console.log('Usuarios: ', loggedUsers);
+            // console.log('Se ha conectado: ', socket.jsonUser.username);
+
+            socket.emit("successfull-login", {array: loggedUsers, user: socket.jsonUser.username});
 
             socket.on("conexion-chat", function () {
                 chatUsers.push(socket.jsonUser);
@@ -168,20 +171,59 @@ io.on('connection', function (socket) {
                 })
             });
 
-            socket.on('usuarioReady', function (mensaje) {
-                // socket.broadcast.emit("userReady", charactersArray);
-                io.emit("userReady", charactersArray)
-            });
-            socket.on('quitar-hombres', function (array) {
-                for (let i = 0; i < array.length; i++) {
-                    if (array[i].gender === 'male') {
-                        array[i].display = false;
-                    }
+            socket.on('usuarioReady', function (user) {
+                readyUsers.push(user);
+                io.emit("userReady", user + ' is ready to rumble!');
+                console.log('Usuarios listos: ',readyUsers);
+
+                socket.on('disconnect', function () {
+                    let posReady = readyUsers.indexOf(socket.jsonUser.username);
+                    readyUsers.splice(posReady, 1);
+                    io.emit('disconnectedLobby', {message: socket.jsonUser.username + ' has disconnect.', array: readyUsers})
+                })
+
+                if (readyUsers.length === 2){
+                    io.emit("game-start", {characters: charactersArray, usersReady: readyUsers});
+
+                    socket.on('delete-character', function (card, array) {
+                        console.log('CARTA RECIBIDA: ', card);
+                        for (let i = 0; i < array.length; i++){
+                            if (card === array[i].name){
+                                array[i].display = false;
+                            }
+                        }
+                        io.emit('deleted-character', array);
+                    })
+
+                    socket.on('quitar-hombres', function (array) {
+                        for (let i = 0; i < array.length; i++) {
+                            if (array[i].gender === 'male') {
+                                array[i].display = false;
+                            }
+                        }
+                        io.emit('hombres-quitados', array)
+                    });
+
+                    socket.on('blue-eyes', function (array) {
+                        for (let i = 0; i < array.length; i++) {
+                            if (array[i].eyes === 'blue') {
+                                array[i].display = false;
+                            }
+                        }
+                        io.emit('has-blue-eyes', array)
+                    });
+
                 }
-                io.emit('hombres-quitados', array)
+
+                socket.on('disconnect', function () {
+                    let pos = readyUsers.indexOf(socket.jsonUser.username);
+                    readyUsers.splice(pos, 1);
+                });
+
             });
+
             // console.log('Antes del successfull',  {array: loggedUsers, user: socket.jsonUser.username});
-            socket.emit("successfull-login", {array: loggedUsers, user: socket.jsonUser.username});
+
         }
     });
 

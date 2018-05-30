@@ -1,20 +1,8 @@
 <div class="container mt-5" *ngIf="multiplayer.user">
   <h1>Waiting for other players to be ready...</h1>
-
   <button class="btn-hover color-3" (click)="imReady()">I am ready!</button>
-  <ul>
-    <li *ngFor="let usuario of arrayUsuarios" style="display: inline;">
-      <div class="card col-2" style="display: inline-block;" *ngIf="usuario.display">
-        <img class="card-img-top" src="{{usuario.image}}" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">{{usuario.name}}</h5>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-    </li>
-  </ul>
   <button class="btn-hover color-2" routerLink="/menu">Back to menu</button>
-  <button (click)="quitarHombres()">Quitar a los hombres</button>
+
 </div>
 
 <div *ngIf="!multiplayer.user">

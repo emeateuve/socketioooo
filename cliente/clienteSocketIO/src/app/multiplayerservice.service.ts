@@ -15,6 +15,9 @@ export class MultiplayerserviceService{
 
   public isLogged = false;
 
+  public usersReady = [];
+  public charactersArray = [];
+
   constructor() {
     this.socket = io(this.url);
   }
@@ -70,7 +73,7 @@ export class MultiplayerserviceService{
 
   public sendMessage(message){
     this.socket.emit('message', message);
-  }
+  };
 
   public newMessage = () => {
     return Observable.create((observer) => {
@@ -80,10 +83,13 @@ export class MultiplayerserviceService{
     })
   };
 
-  /*                                 GAME                                        */
+
+  /*                              GAME LOBBY                                     */
+
   public usuarioReady(mensaje){
     this.socket.emit('usuarioReady', mensaje);
   }
+
   public usuarioEstaListo = () => {
     return Observable.create((observer) => {
       this.socket.on('userReady', (data) => {
@@ -92,13 +98,52 @@ export class MultiplayerserviceService{
     })
   };
 
+  public allReady = () => {
+    return Observable.create((observer) => {
+      this.socket.on('game-start', (data) => {
+        this.charactersArray = data.characters;
+        this.usersReady = data.usersReady;
+        observer.next(data);
+      })
+    })
+  };
+
+
+  /*                                 GAME                                        */
+  public deleteCharacter(card, array){
+    this.socket.emit('delete-character', card, array)
+  }
+  public deletedCharacter = () => {
+    return Observable.create((observer) => {
+      this.socket.on('deleted-character', (data) => {
+        observer.next(data);
+        this.charactersArray = data;
+      })
+    })
+  };
+
   public quitarHombres(array){
     this.socket.emit('quitar-hombres', array);
   }
+
+  public blueEyes(array){
+    this.socket.emit('blue-eyes', array);
+  }
+
+  public hasBlueEyes = () => {
+    return Observable.create((observer) => {
+      this.socket.on('has-blue-eyes', (data) => {
+        observer.next(data);
+        this.charactersArray = data;
+      })
+    })
+  };
+
   public arrayEditado = () => {
     return Observable.create((observer) => {
       this.socket.on('hombres-quitados', (data) => {
         observer.next(data);
+        this.charactersArray = data;
       })
     })
   };

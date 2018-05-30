@@ -1,3 +1,17 @@
-<p>
-  game works!
-</p>
+<div class="container-fluid">
+  <button (click)="quitarHombres()">Quitar a los hombres</button>
+  <button (click)="hasBlueEyes()"> Tiene ojos azules?</button>
+  <ul>
+    <li *ngFor="let card of multiplayer.charactersArray" style="display: inline;">
+      <div class="card col-2" style="display: inline-block;" *ngIf="card.display">
+        <img class="card-img-top" src="{{card.image}}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{card.name}}</h5>
+          <button (click)="deleteCharacter(card.name)" class="btn btn-primary">Delete this character</button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<button routerLink="/">Back to login</button>
+

@@ -15,21 +15,21 @@ export class GamelobbyComponent implements OnInit {
 
   ngOnInit() {
     this.multiplayer.usuarioEstaListo().subscribe((data) => {
-      console.log('Uno se ha al juego', data)
+      console.log(data)
       this.arrayUsuarios = data;
     });
-    this.multiplayer.arrayEditado().subscribe((data) => {
-      console.log('array devuelto de usuarios nuevos', data)
-      this.arrayUsuarios = data;
+
+
+    this.multiplayer.allReady().subscribe((data) => {
+      this.router.navigateByUrl('/game');
     });
+
   }
 
   imReady(){
     this.multiplayer.usuarioReady(this.multiplayer.user);
   }
 
-  quitarHombres(){
-    this.multiplayer.quitarHombres(this.arrayUsuarios);
-  }
+
 
 }
