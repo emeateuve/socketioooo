@@ -1,4 +1,9 @@
-<div class="container">
+<div *ngIf="multiplayer.isLogged" class="container">
+  <!--<div class="alert alert-success" role="alert">-->
+    <!--This is a success alert—check it out!-->
+  <!--</div>-->
+  <p class="alert alert-success" style="text-align: center">You are logged as {{multiplayer.user}} !</p>
+  <p style="text-align: center">Current online players: {{multiplayer.connectedUsers.length}}</p>
   <div id="accordion" class="mt-5">
     <div class="card">
       <div class="card-header" id="headingOne">
@@ -55,10 +60,9 @@
     </div>
   </div>
 </div>
-<div>
-  <h1>HOLA {{userName}}</h1>
-  <ul>
-    <li *ngFor="let usuario of arrayUsernames">{{usuario.username}}</li>
-  </ul>
+
+<div *ngIf="!multiplayer.isLogged">
+  <h1>NO ESTÁS LOGEADO</h1>
+  <button class="btn-hover color-2" (click)="goToMain()">Back to LogIn</button>
 </div>
 

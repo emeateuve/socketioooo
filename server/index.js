@@ -10,7 +10,7 @@ app.use(express.static('public'));
 }); */
 
 var loggedUsers = [];
-
+var loggedUser = false;
 
 var charactersArray = [
     {
@@ -170,7 +170,7 @@ io.on('connection', function (socket) {
                 }
                 io.emit('hombres-quitados', array)
             });
-            console.log('Antes del successfull',  {array: loggedUsers, user: socket.jsonUser.username})
+            // console.log('Antes del successfull',  {array: loggedUsers, user: socket.jsonUser.username});
             socket.emit("successfull-login", {array: loggedUsers, user: socket.jsonUser.username});
         }
     });

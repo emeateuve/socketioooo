@@ -11,6 +11,8 @@ export class MultiplayerserviceService{
   public user;
   public connectedUsers = [];
 
+  public isLogged = false;
+
   constructor() {
     this.socket = io(this.url);
   }
@@ -28,7 +30,9 @@ export class MultiplayerserviceService{
         this.connectedUsers = jsonUser.array;
         this.user = jsonUser.user;
         observer.next(jsonUser);
+        this.isLogged = true;
         console.log('USER: ', this.user, 'ARRAY: ',this.connectedUsers);
+
       });
     });
   };

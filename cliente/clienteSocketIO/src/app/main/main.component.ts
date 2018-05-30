@@ -13,13 +13,14 @@ export class MainComponent implements OnInit {
   constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
 
   ngOnInit() {
-    this.multiplayer.successfullLogin().subscribe((data) => {
-      this.router.navigateByUrl('/menu');
-    });
+    // this.multiplayer.successfullLogin().subscribe((data) => {
+    //   this.router.navigateByUrl('/menu');
+    // });
   }
 
   userLogin(){
     this.multiplayer.userLogin(this.userName);
+    this.router.navigateByUrl('/menu');
   }
 
 

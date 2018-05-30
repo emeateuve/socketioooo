@@ -19,13 +19,12 @@ export class MenuComponent implements OnInit {
     /*ARREGLAR VERIFICACION*/
     console.log('entra en menu')
     this.multiplayer.successfullLogin().subscribe((data) => {
-      console.log('entra en el subscribe de menu')
-      console.log(data)
+      // console.log('entra en el subscribe de menu')
+      // console.log(data)
       this.userName = data.user;
       this.arrayUsernames = data.array;
-      // console.log(this.userName);
-      // console.log(this.arrayUsernames)
-
+      console.log('Está logeado¿?¿??¿?¿?¿',this.multiplayer.isLogged)
+      this.connected = this.multiplayer.isLogged;
     });
     // alert('Welcome ' + this.arrayUsernames);
   }
@@ -35,6 +34,10 @@ export class MenuComponent implements OnInit {
   }
   goToChat(){
     this.router.navigateByUrl('/chat');
+  }
+
+  goToMain(){
+    this.router.navigateByUrl('');
   }
 
 }
