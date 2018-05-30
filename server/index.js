@@ -10,6 +10,8 @@ app.use(express.static('public'));
 }); */
 
 var loggedUsers = [];
+var chatUsers = [];
+
 var loggedUser = false;
 
 var charactersArray = [
@@ -140,6 +142,7 @@ io.on('connection', function (socket) {
         loggedUser = false;
         for (let i = 0; i < loggedUsers.length; i++) {
             if (user === loggedUsers[i].username) {
+                socket.emit('existing-user', user + ' already exists! Try with another username.')
                 console.log('El usuario ya existe!');
                 loggedUser = true;
             }
@@ -151,11 +154,18 @@ io.on('connection', function (socket) {
             console.log('Se ha conectado: ', socket.jsonUser.username);
 
             socket.on("conexion-chat", function () {
-                console.log('Se ha conectado al chat un cliente');
-                socket.on("message", function (mensaje) {
-                    console.log("recibido mensaje: " + mensaje);
-                    io.emit("message", mensaje);
+                chatUsers.push(socket.jsonUser);
+                io.emit('connected-chat-user', {message: socket.jsonUser.username + ' is connected.', array: chatUsers});
+
+                socket.on("message", function (chatMessage) {
+                    io.emit("new-message", socket.jsonUser.username + ': ' + chatMessage);
                 });
+
+                socket.on('disconnect', function () {
+                    let posChat = chatUsers.indexOf(socket.jsonUser.username);
+                    chatUsers.splice(posChat, 1);
+                    io.emit('disconnectedChat', {message: socket.jsonUser.username + ' has disconnect.', array: chatUsers})
+                })
             });
 
             socket.on('usuarioReady', function (mensaje) {
@@ -177,7 +187,7 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         io.emit("desconexion");
-        console.log('Desconexion desde servidor')
+        console.log('Desconectado del servidor')
     })
 });
 

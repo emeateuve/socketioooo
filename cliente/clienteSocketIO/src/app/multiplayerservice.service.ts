@@ -9,7 +9,9 @@ export class MultiplayerserviceService{
   private socket;
 
   public user;
+
   public connectedUsers = [];
+  public chatUsers = [];
 
   public isLogged = false;
 
@@ -31,8 +33,13 @@ export class MultiplayerserviceService{
         this.user = jsonUser.user;
         observer.next(jsonUser);
         this.isLogged = true;
-        console.log('USER: ', this.user, 'ARRAY: ',this.connectedUsers);
-
+      });
+    });
+  };
+  public alreadyExists = () => {
+    return Observable.create((observer) => {
+      this.socket.on('existing-user',(data) => {
+        observer.next(data);
       });
     });
   };
@@ -43,14 +50,31 @@ export class MultiplayerserviceService{
     this.socket.emit('conexion-chat');
   }
 
-  public sendMessage(message){
-    console.log('desde el servicio:', message);
-    this.socket.emit('message', message);
-  }
+  public connectedChatUser = () => {
+    return Observable.create((observer) => {
+      this.socket.on('connected-chat-user', (data) => {
+        observer.next(data);
+        this.chatUsers = data.array;
+      })
+    })
+  };
 
   public usuarioDesconectadoChat = () => {
     return Observable.create((observer) => {
-      this.socket.on('desconexion', (data) => {
+      this.socket.on('disconnectedChat', (data) => {
+        observer.next(data);
+        this.chatUsers = data.array;
+      })
+    })
+  };
+
+  public sendMessage(message){
+    this.socket.emit('message', message);
+  }
+
+  public newMessage = () => {
+    return Observable.create((observer) => {
+      this.socket.on('new-message', (data) => {
         observer.next(data);
       })
     })

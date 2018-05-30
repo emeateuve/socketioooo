@@ -9,13 +9,17 @@ import {NgForm} from "@angular/forms";
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+
   public userName;
+
+  public alreadyExistsMessage;
+
   constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
 
   ngOnInit() {
-    // this.multiplayer.successfullLogin().subscribe((data) => {
-    //   this.router.navigateByUrl('/menu');
-    // });
+    this.multiplayer.alreadyExists().subscribe((data) => {
+      this.alreadyExistsMessage = data;
+    });
   }
 
   userLogin(){

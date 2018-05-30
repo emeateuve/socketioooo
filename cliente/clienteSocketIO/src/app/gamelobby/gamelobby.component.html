@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-5" *ngIf="multiplayer.user">
   <h1>Waiting for other players to be ready...</h1>
 
   <button class="btn-hover color-3" (click)="imReady()">I am ready!</button>
@@ -13,6 +13,13 @@
       </div>
     </li>
   </ul>
+  <button class="btn-hover color-2" routerLink="/menu">Back to menu</button>
+  <button (click)="quitarHombres()">Quitar a los hombres</button>
 </div>
-<button (click)="quitarHombres()">Quitar a los hombres</button>
+
+<div *ngIf="!multiplayer.user">
+  <h1>There must be a problem with your user! Try to login again</h1>
+  <button class="btn-hover color-3" routerLink="">Back to Login</button>
+</div>
+
 

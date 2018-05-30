@@ -10,7 +10,6 @@
       <!--<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">-->
     <!--</div>-->
     <button type="button" class="btn btn-primary col-12" (click)="userLogin()">Login</button>
+    <div *ngIf="alreadyExistsMessage" class="alert alert-danger" role="alert">{{alreadyExistsMessage}}</div>
   </form>
 </div>
-
-

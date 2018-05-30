@@ -25,19 +25,11 @@ export class GamelobbyComponent implements OnInit {
   }
 
   imReady(){
-    // this.router.navigateByUrl('/game');
-    this.multiplayer.usuarioReady('prueba');
+    this.multiplayer.usuarioReady(this.multiplayer.user);
   }
 
   quitarHombres(){
-    this.multiplayer.quitarHombres(this.arrayUsuarios)
-    // for (let i = 0; i < this.arrayUsuarios.length; i++){
-    //   if (this.arrayUsuarios[i].gender == 'male'){
-    //     this.arrayUsuarios[i].display = false;
-    //   }
-    //
-    // }
-
+    this.multiplayer.quitarHombres(this.arrayUsuarios);
   }
 
 }
