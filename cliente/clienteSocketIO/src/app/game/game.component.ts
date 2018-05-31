@@ -17,6 +17,9 @@ export class GameComponent implements OnInit {
     this.multiplayer.arrayEditado().subscribe((data) => {    });
     this.multiplayer.hasBlueEyes().subscribe((data) => {    });
     this.multiplayer.deletedCharacter().subscribe((data) => {    });
+
+    this.multiplayer.correctAnswer().subscribe((data) => {    });
+    this.multiplayer.wrongAnswer().subscribe((data) => {    });
   }
 
   deleteCharacter(card){
@@ -29,6 +32,10 @@ export class GameComponent implements OnInit {
 
   hasBlueEyes(){
     this.multiplayer.blueEyes(this.multiplayer.charactersArray);
+  }
+
+  thisIsTheOne(card){
+    this.multiplayer.thisIsTheOne(card);
   }
 
 }

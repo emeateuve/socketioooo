@@ -149,7 +149,7 @@ io.on('connection', function (socket) {
             }
         }
         if(!loggedUser){
-            socket.jsonUser = {username: user};
+            socket.jsonUser = {username: user, role: null };
             loggedUsers.push(socket.jsonUser);
             // console.log('Usuarios: ', loggedUsers);
             // console.log('Se ha conectado: ', socket.jsonUser.username);
@@ -172,28 +172,36 @@ io.on('connection', function (socket) {
             });
 
             socket.on('usuarioReady', function (user) {
-                readyUsers.push(user);
-                io.emit("userReady", user + ' is ready to rumble!');
-                console.log('Usuarios listos: ',readyUsers);
+
+                if(readyUsers.includes(user)){
+                    io.emit("userReady", user + ' is ready to rumble!');
+                } else {
+                    readyUsers.push(user);
+                    io.emit("userReady", user + ' is ready to rumble!');
+                }
+
+                console.log('Usuarios listos: ', readyUsers);
 
                 socket.on('disconnect', function () {
                     let posReady = readyUsers.indexOf(socket.jsonUser.username);
                     readyUsers.splice(posReady, 1);
+                    console.log('Uno menos', readyUsers);
                     io.emit('disconnectedLobby', {message: socket.jsonUser.username + ' has disconnect.', array: readyUsers})
-                })
+                });
 
                 if (readyUsers.length === 2){
+                    /*Si lo envia el servidor solo 1 jugador puede jugar. si lo envia al socket lo pueden hacer los 2*/
                     io.emit("game-start", {characters: charactersArray, usersReady: readyUsers});
+                    // readyUsers = [];
 
                     socket.on('delete-character', function (card, array) {
-                        console.log('CARTA RECIBIDA: ', card);
                         for (let i = 0; i < array.length; i++){
                             if (card === array[i].name){
                                 array[i].display = false;
                             }
                         }
                         io.emit('deleted-character', array);
-                    })
+                    });
 
                     socket.on('quitar-hombres', function (array) {
                         for (let i = 0; i < array.length; i++) {
@@ -213,6 +221,14 @@ io.on('connection', function (socket) {
                         io.emit('has-blue-eyes', array)
                     });
 
+                    socket.on('this-is-the-one', function (card) {
+                        console.log('Antes de comprobarlo');
+                        if(card === 'Paul'){
+                            io.emit('correct-answer', socket.jsonUser.username + ' has guessed who it is!');
+                        } else {
+                            io.emit('wrong-answer', socket.jsonUser.username + ' WRONG');
+                        }
+                    });
                 }
 
                 socket.on('disconnect', function () {
@@ -221,9 +237,6 @@ io.on('connection', function (socket) {
                 });
 
             });
-
-            // console.log('Antes del successfull',  {array: loggedUsers, user: socket.jsonUser.username});
-
         }
     });
 

@@ -101,9 +101,10 @@ export class MultiplayerserviceService{
   public allReady = () => {
     return Observable.create((observer) => {
       this.socket.on('game-start', (data) => {
+        observer.next(data);
         this.charactersArray = data.characters;
         this.usersReady = data.usersReady;
-        observer.next(data);
+        console.log('Están listos: ', this.usersReady);
       })
     })
   };
@@ -147,4 +148,26 @@ export class MultiplayerserviceService{
       })
     })
   };
+
+  public thisIsTheOne(card) {
+    this.socket.emit('this-is-the-one', card);
+  }
+  public correctAnswer = () => {
+      return Observable.create((observer) => {
+        this.socket.on('correct-answer', (data) => {
+          observer.next(data);
+          console.log(data);
+        })
+      })
+    };
+
+  public wrongAnswer = () => {
+      return Observable.create((observer) => {
+        this.socket.on('wrong-answer', (data) => {
+          observer.next(data);
+          console.log(data);
+        })
+      })
+    };
+
 }
