@@ -112,7 +112,6 @@ export class MultiplayerserviceService {
     return Observable.create((observer) => {
       this.socket.on('room-message', (data) => {
         observer.next(data);
-        console.log(data)
       })
     })
   };
@@ -188,7 +187,7 @@ export class MultiplayerserviceService {
   };
 
   public thisIsTheOne(card) {
-    this.socket.emit('this-is-the-one', card, this.randomCard);
+    this.socket.emit('this-is-the-one', card, this.randomCard, this.usersInGame);
   }
 
   public correctAnswer = () => {
@@ -205,6 +204,7 @@ export class MultiplayerserviceService {
       this.socket.on('wrong-answer', (data) => {
         observer.next(data);
         this.usersInGame = data;
+        console.log(this.usersInGame)
       })
     })
   };

@@ -245,12 +245,20 @@ io.on('connection', function (socket) {
                         io.emit('has-blue-eyes', array)
                     });
 
-                    socket.on('this-is-the-one', function (card, randomCard) {
+                    socket.on('this-is-the-one', function (card, randomCard, usersInGame) {
+                        console.log('Antes de cambiar: ', usersInGame);
                         if (card === randomCard.name) {
                             io.emit('correct-answer', socket.jsonUser.username + ' has guessed who it is!');
                         } else {
-                            gamerJSON.points = gamerJSON.points - 10;
-                            io.emit('wrong-answer', gamerJSON);
+                            for(let i = 0; i < usersInGame.length; i++){
+                                if(usersInGame[i].user === socket.jsonUser.username){
+                                    usersInGame[i].points = usersInGame[i].points - 10;
+                                    // console.log('Después de cambiar', usersInGame);
+                                    io.emit('wrong-answer', usersInGame);
+                                }
+                            }
+                            // usersInGame[socket.jsonUser.username].points = usersInGame[socket.jsonUser.username].points - 10;
+
                         }
                     });
 

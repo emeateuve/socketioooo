@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div *ngFor="let guesser of multiplayer.usersInGame">
     <div *ngIf="guesser.guesser === true && guesser.user === multiplayer.user">
-      <!--<h1 *ngIf="multiplayer.usersInGame">You are now the guesser! {{multiplayer.user}} with {{multiplayer.usersInGame[guesser].points}} points!</h1>-->
+      <h1 *ngIf="multiplayer.usersInGame">You are now the guesser! {{multiplayer.user}} with {{guesser.points}} points!</h1>
       <div class="col-6">
         <button (click)="quitarHombres()">Quitar a los hombres</button>
         <button (click)="hasBlueEyes()"> Tiene ojos azules?</button>
@@ -23,7 +23,7 @@
 
   <div *ngFor="let guesser of multiplayer.usersInGame">
     <div *ngIf="guesser.guesser === false && guesser.user === multiplayer.user">
-      <!--<h1 *ngIf="multiplayer.usersInGame">Your points: {{multiplayer.usersInGame[guesser].points}}</h1>-->
+      <h1 *ngIf="multiplayer.usersInGame">Your points: {{guesser.points}}</h1>
       <h1>Eres el dueño {{multiplayer.user}}</h1>
       <h1>This is your card: </h1>
       <div class="card" style="width: 18rem;">
