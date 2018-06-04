@@ -12,6 +12,9 @@ app.use(express.static('public'));
 var loggedUsers = [];
 var chatUsers = [];
 var readyUsers = [];
+var usersInGame = [];
+
+var round = 0;
 
 var loggedUser = false;
 
@@ -148,17 +151,23 @@ io.on('connection', function (socket) {
                 loggedUser = true;
             }
         }
-        if(!loggedUser){
-            socket.jsonUser = {username: user, role: null };
+        if (!loggedUser) {
+            socket.jsonUser = {username: user, room: null, guesser: false, points: 100};
             loggedUsers.push(socket.jsonUser);
             // console.log('Usuarios: ', loggedUsers);
             // console.log('Se ha conectado: ', socket.jsonUser.username);
 
-            socket.emit("successfull-login", {array: loggedUsers, user: socket.jsonUser.username});
+            socket.emit("successfull-login", {
+                array: loggedUsers,
+                user: socket.jsonUser.username
+            });
 
             socket.on("conexion-chat", function () {
                 chatUsers.push(socket.jsonUser);
-                io.emit('connected-chat-user', {message: socket.jsonUser.username + ' is connected.', array: chatUsers});
+                io.emit('connected-chat-user', {
+                    message: socket.jsonUser.username + ' is connected.',
+                    array: chatUsers
+                });
 
                 socket.on("message", function (chatMessage) {
                     io.emit("new-message", socket.jsonUser.username + ': ' + chatMessage);
@@ -167,36 +176,57 @@ io.on('connection', function (socket) {
                 socket.on('disconnect', function () {
                     let posChat = chatUsers.indexOf(socket.jsonUser.username);
                     chatUsers.splice(posChat, 1);
-                    io.emit('disconnectedChat', {message: socket.jsonUser.username + ' has disconnect.', array: chatUsers})
+                    io.emit('disconnectedChat', {
+                        message: socket.jsonUser.username + ' has disconnect.',
+                        array: chatUsers
+                    })
                 })
             });
 
-            socket.on('usuarioReady', function (user) {
-
-                if(readyUsers.includes(user)){
-                    io.emit("userReady", user + ' is ready to rumble!');
+            socket.on('usuarioReady', function (user, room) {
+                socket.jsonUser.room = room;
+                let gamerJSON = {user: user, room: socket.jsonUser.room, guesser: socket.jsonUser.guesser, points: socket.jsonUser.points}
+                if (readyUsers.includes(user)) {
+                    io.emit("userReady", {message: user + ' is ready to rumble!', readyUsers: readyUsers});
                 } else {
-                    readyUsers.push(user);
-                    io.emit("userReady", user + ' is ready to rumble!');
+                    readyUsers.push(gamerJSON);
+                    io.emit("userReady", {message: user + ' is ready to rumble!', readyUsers: readyUsers});
+                    socket.join(socket.jsonUser.room);
                 }
 
                 console.log('Usuarios listos: ', readyUsers);
 
                 socket.on('disconnect', function () {
+                    if (socket.jsonUser.room !== null){
+                        socket.leave(socket.jsonUser.room);
+                    }
                     let posReady = readyUsers.indexOf(socket.jsonUser.username);
                     readyUsers.splice(posReady, 1);
                     console.log('Uno menos', readyUsers);
-                    io.emit('disconnectedLobby', {message: socket.jsonUser.username + ' has disconnect.', array: readyUsers})
+                    io.emit('disconnectedLobby', {
+                        message: socket.jsonUser.username + ' has disconnect.',
+                        array: readyUsers
+                    })
                 });
 
-                if (readyUsers.length === 2){
-                    /*Si lo envia el servidor solo 1 jugador puede jugar. si lo envia al socket lo pueden hacer los 2*/
-                    io.emit("game-start", {characters: charactersArray, usersReady: readyUsers});
-                    // readyUsers = [];
+                socket.on('startTheGameNow', function (arrayUsersReady) {
+                    io.in(socket.jsonUser.room).emit('room-message', 'HOLA A LOS USUARIOS DE: ' + socket.jsonUser.room);
+                    arrayUsersReady[0].guesser = true;
+                    arrayUsersReady[1].guesser = false;
 
+                    io.emit("game-start", {
+                        characters: charactersArray,
+                        usersReady: arrayUsersReady,
+                        randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)]
+                    });
+                    readyUsers = [];
+
+                    socket.on('game-message', function (gameMessage) {
+                        io.emit('new-game-message', {message: gameMessage, user: socket.jsonUser.username})
+                    });
                     socket.on('delete-character', function (card, array) {
-                        for (let i = 0; i < array.length; i++){
-                            if (card === array[i].name){
+                        for (let i = 0; i < array.length; i++) {
+                            if (card === array[i].name) {
                                 array[i].display = false;
                             }
                         }
@@ -221,21 +251,21 @@ io.on('connection', function (socket) {
                         io.emit('has-blue-eyes', array)
                     });
 
-                    socket.on('this-is-the-one', function (card) {
+                    socket.on('this-is-the-one', function (card, randomCard) {
                         console.log('Antes de comprobarlo');
-                        if(card === 'Paul'){
+                        if (card === randomCard.name) {
                             io.emit('correct-answer', socket.jsonUser.username + ' has guessed who it is!');
                         } else {
-                            io.emit('wrong-answer', socket.jsonUser.username + ' WRONG');
+                            gamerJSON.points = gamerJSON.points - 10;
+                            io.emit('wrong-answer', gamerJSON);
                         }
                     });
-                }
 
-                socket.on('disconnect', function () {
-                    let pos = readyUsers.indexOf(socket.jsonUser.username);
-                    readyUsers.splice(pos, 1);
+                    socket.on('disconnect', function () {
+                        socket.leave(socket.jsonUser.room);
+                        console.log('Se ha ido del juego', socket.jsonUser.username);
+                    })
                 });
-
             });
         }
     });

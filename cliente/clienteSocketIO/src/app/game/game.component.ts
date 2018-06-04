@@ -11,15 +11,29 @@ export class GameComponent implements OnInit {
 
   constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
 
+  public inputGame;
+  public userRoom;
 
   ngOnInit() {
-    this.multiplayer.allReady().subscribe((data) => {    });
+    this.multiplayer.receiveRoomMessage().subscribe((data) => {     });
+    this.multiplayer.newGameMessage().subscribe((data) => {     });
     this.multiplayer.arrayEditado().subscribe((data) => {    });
     this.multiplayer.hasBlueEyes().subscribe((data) => {    });
     this.multiplayer.deletedCharacter().subscribe((data) => {    });
 
     this.multiplayer.correctAnswer().subscribe((data) => {    });
     this.multiplayer.wrongAnswer().subscribe((data) => {    });
+
+
+  }
+
+  cualeslacarta(){
+    console.log(this.multiplayer.randomCard);
+  }
+
+  gameMessage(){
+    this.multiplayer.sendGameMessage(this.inputGame);
+    this.inputGame = '';
   }
 
   deleteCharacter(card){

@@ -12,25 +12,22 @@ export class MenuComponent implements OnInit {
   public userName;
   public arrayUsernames;
   public connected;
+  public roomName;
 
   constructor(public router: Router, public multiplayer: MultiplayerserviceService) { }
 
   ngOnInit() {
-    /*ARREGLAR VERIFICACION*/
     console.log('entra en menu')
     this.multiplayer.successfullLogin().subscribe((data) => {
-      // console.log('entra en el subscribe de menu')
-      // console.log(data)
       this.userName = data.user;
       this.arrayUsernames = data.array;
-      console.log('Está logeado¿?¿??¿?¿?¿',this.multiplayer.isLogged)
       this.connected = this.multiplayer.isLogged;
     });
-    // alert('Welcome ' + this.arrayUsernames);
   }
 
   goToLobby(){
     this.router.navigateByUrl('/lobby');
+    this.multiplayer.roomName = this.roomName;
   }
   goToChat(){
     this.router.navigateByUrl('/chat');
