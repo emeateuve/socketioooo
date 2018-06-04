@@ -141,21 +141,18 @@ var charactersArray = [
     }
 ];
 io.on('connection', function (socket) {
-    console.log('a user connected');
+
     socket.on("user-login", function (user) {
         loggedUser = false;
         for (let i = 0; i < loggedUsers.length; i++) {
             if (user === loggedUsers[i].username) {
                 socket.emit('existing-user', user + ' already exists! Try with another username.')
-                console.log('El usuario ya existe!');
                 loggedUser = true;
             }
         }
         if (!loggedUser) {
             socket.jsonUser = {username: user, room: null, guesser: false, points: 100};
             loggedUsers.push(socket.jsonUser);
-            // console.log('Usuarios: ', loggedUsers);
-            // console.log('Se ha conectado: ', socket.jsonUser.username);
 
             socket.emit("successfull-login", {
                 array: loggedUsers,
@@ -194,15 +191,12 @@ io.on('connection', function (socket) {
                     socket.join(socket.jsonUser.room);
                 }
 
-                console.log('Usuarios listos: ', readyUsers);
-
                 socket.on('disconnect', function () {
                     if (socket.jsonUser.room !== null){
                         socket.leave(socket.jsonUser.room);
                     }
                     let posReady = readyUsers.indexOf(socket.jsonUser.username);
                     readyUsers.splice(posReady, 1);
-                    console.log('Uno menos', readyUsers);
                     io.emit('disconnectedLobby', {
                         message: socket.jsonUser.username + ' has disconnect.',
                         array: readyUsers
@@ -217,12 +211,12 @@ io.on('connection', function (socket) {
                     io.emit("game-start", {
                         characters: charactersArray,
                         usersReady: arrayUsersReady,
-                        randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)]
+                        randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)],
                     });
                     readyUsers = [];
 
                     socket.on('game-message', function (gameMessage) {
-                        io.emit('new-game-message', {message: gameMessage, user: socket.jsonUser.username})
+                        io.emit('new-game-message', socket.jsonUser.username + ': ' + gameMessage)
                     });
                     socket.on('delete-character', function (card, array) {
                         for (let i = 0; i < array.length; i++) {
@@ -252,7 +246,6 @@ io.on('connection', function (socket) {
                     });
 
                     socket.on('this-is-the-one', function (card, randomCard) {
-                        console.log('Antes de comprobarlo');
                         if (card === randomCard.name) {
                             io.emit('correct-answer', socket.jsonUser.username + ' has guessed who it is!');
                         } else {
@@ -263,7 +256,6 @@ io.on('connection', function (socket) {
 
                     socket.on('disconnect', function () {
                         socket.leave(socket.jsonUser.room);
-                        console.log('Se ha ido del juego', socket.jsonUser.username);
                     })
                 });
             });
@@ -278,5 +270,5 @@ io.on('connection', function (socket) {
 
 
 http.listen(3000, function () {
-    console.log('listening on *:3000', ' desde el servidor');
+    console.log('listening on *:3000');
 });

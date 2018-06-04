@@ -12,13 +12,18 @@ export class GameComponent implements OnInit {
   constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
 
   public inputGame;
-  public userRoom;
+  public roomConversation = [];
 
   ngOnInit() {
     this.multiplayer.receiveRoomMessage().subscribe((data) => {     });
-    this.multiplayer.newGameMessage().subscribe((data) => {     });
+    // this.multiplayer.allReady().subscribe((data) => {     });
+    this.multiplayer.newGameMessage().subscribe((data) => {
+      this.roomConversation.push(data);
+    });
+
     this.multiplayer.arrayEditado().subscribe((data) => {    });
     this.multiplayer.hasBlueEyes().subscribe((data) => {    });
+
     this.multiplayer.deletedCharacter().subscribe((data) => {    });
 
     this.multiplayer.correctAnswer().subscribe((data) => {    });
@@ -27,9 +32,6 @@ export class GameComponent implements OnInit {
 
   }
 
-  cualeslacarta(){
-    console.log(this.multiplayer.randomCard);
-  }
 
   gameMessage(){
     this.multiplayer.sendGameMessage(this.inputGame);

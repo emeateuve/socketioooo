@@ -15,7 +15,6 @@ export class GamelobbyComponent implements OnInit {
 
   ngOnInit() {
     this.multiplayer.usuarioEstaListo().subscribe((data) => {
-      console.log(data);
       this.arrayUsuarios = data;
     });
 

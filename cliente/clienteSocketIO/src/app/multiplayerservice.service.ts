@@ -4,7 +4,7 @@ import {Observable} from "rxjs/Observable";
 import {Router} from "@angular/router";
 
 @Injectable()
-export class MultiplayerserviceService{
+export class MultiplayerserviceService {
   private url = 'http://localhost:3000';
   private socket;
 
@@ -18,12 +18,11 @@ export class MultiplayerserviceService{
   public isLogged = false;
 
 
-
   public usersInGame = [];
   public usersReady = [];
   public charactersArray = [];
   public randomCard;
-  public userRole;
+  public playerData;
 
   constructor(public router: Router) {
     this.socket = io(this.url);
@@ -32,13 +31,13 @@ export class MultiplayerserviceService{
 
   /*                               LOGIN                                  */
 
-  public userLogin(user){
+  public userLogin(user) {
     this.socket.emit('user-login', user);
   }
 
   public successfullLogin = () => {
     return Observable.create((observer) => {
-      this.socket.on('successfull-login',(jsonUser) => {
+      this.socket.on('successfull-login', (jsonUser) => {
         this.connectedUsers = jsonUser.array;
         this.user = jsonUser.user;
         observer.next(jsonUser);
@@ -48,7 +47,7 @@ export class MultiplayerserviceService{
   };
   public alreadyExists = () => {
     return Observable.create((observer) => {
-      this.socket.on('existing-user',(data) => {
+      this.socket.on('existing-user', (data) => {
         observer.next(data);
       });
     });
@@ -56,7 +55,7 @@ export class MultiplayerserviceService{
 
 
   /*                                 CHAT                                       */
-  public conexionChat(){
+  public conexionChat() {
     this.socket.emit('conexion-chat');
   }
 
@@ -78,7 +77,7 @@ export class MultiplayerserviceService{
     })
   };
 
-  public sendMessage(message){
+  public sendMessage(message) {
     this.socket.emit('message', message);
   };
 
@@ -93,7 +92,7 @@ export class MultiplayerserviceService{
 
   /*                              GAME LOBBY                                     */
 
-  public usuarioReady(mensaje){
+  public usuarioReady(mensaje) {
     this.socket.emit('usuarioReady', mensaje, this.roomName);
   }
 
@@ -102,7 +101,7 @@ export class MultiplayerserviceService{
       this.socket.on('userReady', (data) => {
         observer.next(data);
         this.usersReady = data.readyUsers;
-        if(this.usersReady.length >= 2){
+        if (this.usersReady.length >= 2) {
           this.socket.emit('startTheGameNow', this.usersReady);
         }
       })
@@ -125,16 +124,18 @@ export class MultiplayerserviceService{
         this.randomCard = data.randomCard;
         this.charactersArray = data.characters;
         this.usersInGame = data.usersReady;
-        console.log('usuarios en juego: ',this.usersInGame);
-      })
-    })
+        // this.playerData = data.gamerData
+        /*XQ NO ME DA EL GAMERJSON!?¿"*/
+        console.log('detalles de jugador: ', this.usersInGame);
+      });
+    });
   };
 
 
   /*                                 GAME                                        */
 
 
-  public sendGameMessage(message){
+  public sendGameMessage(message) {
     this.socket.emit('game-message', message);
   }
 
@@ -147,9 +148,10 @@ export class MultiplayerserviceService{
     })
   };
 
-  public deleteCharacter(card, array){
+  public deleteCharacter(card, array) {
     this.socket.emit('delete-character', card, array)
   }
+
   public deletedCharacter = () => {
     return Observable.create((observer) => {
       this.socket.on('deleted-character', (data) => {
@@ -159,11 +161,11 @@ export class MultiplayerserviceService{
     })
   };
 
-  public quitarHombres(array){
+  public quitarHombres(array) {
     this.socket.emit('quitar-hombres', array);
   }
 
-  public blueEyes(array){
+  public blueEyes(array) {
     this.socket.emit('blue-eyes', array);
   }
 
@@ -188,22 +190,23 @@ export class MultiplayerserviceService{
   public thisIsTheOne(card) {
     this.socket.emit('this-is-the-one', card, this.randomCard);
   }
+
   public correctAnswer = () => {
-      return Observable.create((observer) => {
-        this.socket.on('correct-answer', (data) => {
-          observer.next(data);
-          console.log(data);
-        })
+    return Observable.create((observer) => {
+      this.socket.on('correct-answer', (data) => {
+        observer.next(data);
+        console.log(data);
       })
-    };
+    })
+  };
 
   public wrongAnswer = () => {
-      return Observable.create((observer) => {
-        this.socket.on('wrong-answer', (data) => {
-          observer.next(data);
-          console.log('MAL ', data);
-        })
+    return Observable.create((observer) => {
+      this.socket.on('wrong-answer', (data) => {
+        observer.next(data);
+        this.usersInGame = data;
       })
-    };
+    })
+  };
 
 }

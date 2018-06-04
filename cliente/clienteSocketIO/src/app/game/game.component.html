@@ -1,37 +1,47 @@
-<div class="container-fluid" *ngIf="multiplayer.user">
-  <h1>{{multiplayer.user}} -</h1>
-  <div class="col-6">
-    <button (click)="quitarHombres()">Quitar a los hombres</button>
-    <button (click)="hasBlueEyes()"> Tiene ojos azules?</button>
-    <ul>
-      <li *ngFor="let card of multiplayer.charactersArray" style="display: inline;">
-        <div class="card col-2" style="display: inline-block;" *ngIf="card.display">
-          <img class="card-img-top" src="{{card.image}}" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">{{card.name}}</h5>
-            <button (click)="deleteCharacter(card.name)" class="btn btn-primary">Delete this character</button>
-            <button (click)="thisIsTheOne(card.name)" class="btn btn-primary">This is the one</button>
-          </div>
+<div class="container-fluid">
+  <div *ngFor="let guesser of multiplayer.usersInGame">
+    <div *ngIf="guesser.guesser === true && guesser.user === multiplayer.user">
+      <!--<h1 *ngIf="multiplayer.usersInGame">You are now the guesser! {{multiplayer.user}} with {{multiplayer.usersInGame[guesser].points}} points!</h1>-->
+      <div class="col-6">
+        <button (click)="quitarHombres()">Quitar a los hombres</button>
+        <button (click)="hasBlueEyes()"> Tiene ojos azules?</button>
+        <ul>
+          <li *ngFor="let card of multiplayer.charactersArray" style="display: inline;">
+            <div class="card col-2" style="display: inline-block;" *ngIf="card.display">
+              <img class="card-img-top" src="{{card.image}}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">{{card.name}}</h5>
+                <button (click)="deleteCharacter(card.name)" class="btn btn-primary">Delete this character</button>
+                <button (click)="thisIsTheOne(card.name)" class="btn btn-primary">This is the one</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div *ngFor="let guesser of multiplayer.usersInGame">
+    <div *ngIf="guesser.guesser === false && guesser.user === multiplayer.user">
+      <!--<h1 *ngIf="multiplayer.usersInGame">Your points: {{multiplayer.usersInGame[guesser].points}}</h1>-->
+      <h1>Eres el dueño {{multiplayer.user}}</h1>
+      <h1>This is your card: </h1>
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{{multiplayer.randomCard.image}}" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">{{multiplayer.randomCard.name}}</p>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
-</div>
-<div *ngFor="let guesser of multiplayer.usersInGame">
-  <div *ngIf="guesser.guesser === true && guesser.user === multiplayer.user">
-    <h1>Eres el guesser {{multiplayer.user}}</h1>
-  </div>
-</div>
-<div *ngFor="let guesser of multiplayer.usersInGame">
-  <div *ngIf="guesser.guesser === false && guesser.user === multiplayer.user">
-    <h1>Eres el dueño {{multiplayer.user}}</h1>
-  </div>
-</div>
-<button (click)="cualeslacarta()">cual es la carta?</button>
+  <!--<button (click)="cualeslacarta()">cual es la carta?</button>-->
 
-<div class="col-6">
-  <input [(ngModel)]="inputGame" name="inputGame" type="text">
-  <button (click)="gameMessage()">Send message</button>
+  <div class="col-6">
+    <input [(ngModel)]="inputGame" name="inputGame" type="text">
+    <button (click)="gameMessage()">Send message</button>
+    <div *ngFor="let message of roomConversation">
+      {{message}}
+    </div>
+  </div>
+  <button routerLink="/">Back to login</button>
 </div>
-<button routerLink="/">Back to login</button>
-

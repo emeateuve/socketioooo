@@ -17,7 +17,6 @@ export class MenuComponent implements OnInit {
   constructor(public router: Router, public multiplayer: MultiplayerserviceService) { }
 
   ngOnInit() {
-    console.log('entra en menu')
     this.multiplayer.successfullLogin().subscribe((data) => {
       this.userName = data.user;
       this.arrayUsernames = data.array;
