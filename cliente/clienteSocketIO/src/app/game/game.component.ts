@@ -27,8 +27,10 @@ export class GameComponent implements OnInit {
     this.multiplayer.deletedCharacter().subscribe((data) => {    });
 
     this.multiplayer.correctAnswer().subscribe((data) => {    });
-    this.multiplayer.wrongAnswer().subscribe((data) => {    });
-
+    this.multiplayer.wrongAnswer().subscribe((data) => {
+      this.roomConversation.push(data.message);
+    });
+    this.multiplayer.gameEnd().subscribe((data) => {    });
 
   }
 

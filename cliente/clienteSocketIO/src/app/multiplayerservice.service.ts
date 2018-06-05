@@ -22,7 +22,7 @@ export class MultiplayerserviceService {
   public usersReady = [];
   public charactersArray = [];
   public randomCard;
-  public playerData;
+  public winner;
 
   constructor(public router: Router) {
     this.socket = io(this.url);
@@ -123,8 +123,6 @@ export class MultiplayerserviceService {
         this.randomCard = data.randomCard;
         this.charactersArray = data.characters;
         this.usersInGame = data.usersReady;
-        // this.playerData = data.gamerData
-        /*XQ NO ME DA EL GAMERJSON!?¿"*/
         console.log('detalles de jugador: ', this.usersInGame);
       });
     });
@@ -203,8 +201,19 @@ export class MultiplayerserviceService {
     return Observable.create((observer) => {
       this.socket.on('wrong-answer', (data) => {
         observer.next(data);
-        this.usersInGame = data;
+        this.usersInGame = data.array;
         console.log(this.usersInGame)
+      })
+    })
+  };
+
+  public gameEnd = () => {
+    return Observable.create((observer) => {
+      this.socket.on('game-end', (data) => {
+        observer.next(data);
+        this.usersInGame = data.array;
+        this.winner = data.winner
+        // console.log(this.usersInGame)
       })
     })
   };

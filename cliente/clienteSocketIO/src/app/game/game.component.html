@@ -45,3 +45,8 @@
   </div>
   <button routerLink="/">Back to login</button>
 </div>
+<div *ngIf="multiplayer.winner">
+  <h1>THE WINNER IS {{multiplayer.winner.user}} with {{multiplayer.winner.points}} points! EASY GAME</h1>
+  <img src="./../../assets/marcianito.gif">
+  <button class="btn-hover color-2" routerLink="/menu">BACK TO MENU</button>
+</div>
