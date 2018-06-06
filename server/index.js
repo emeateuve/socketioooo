@@ -5,13 +5,20 @@ var io = require('socket.io')(http);
 
 app.use(express.static('public'));
 
+/* EJEMPLO ALFONSO */
+/* app.post('/action', function(req, res){
+  consulta mysql si está ok
+
+  res.sendFile(__dirname + '/index.html');
+}); */
+/*****************************************/
+
 /* app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 }); */
 
 var loggedUsers = [];
 var chatUsers = [];
-var readyUsers = [];
 
 var loggedUser = false;
 
@@ -219,16 +226,6 @@ io.on('connection', function (socket) {
                                 }
                             }
                         }
-
-                        socket.on('disconnect', function () {
-                            let posReady = io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
-                            io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posReady, 1);
-                            io.emit('disconnectedLobby', {
-                                message: socket.jsonUser.username + ' has disconnect.',
-                                array: io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady
-                            })
-                            socket.leave(socket.jsonUser.room);
-                        });
 
                         socket.on('startTheGameNow', function (arrayUsersReady) {
                             io.in(socket.jsonUser.room).emit('room-message', 'HOLA A LOS USUARIOS DE: ' + socket.jsonUser.room);
