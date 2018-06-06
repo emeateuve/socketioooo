@@ -188,8 +188,9 @@ io.on('connection', function (socket) {
             socket.on('connected-lobby', function (room) {
                 socket.jsonUser.room = room;
                 socket.join(socket.jsonUser.room);
-                // You can create new variables in a room.
                 io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady = [];
+                // You can create new variables in a room.
+
                 socket.on('usuarioReady', function () {
                         let gamerJSON = {
                             user: socket.jsonUser.username,
@@ -220,13 +221,13 @@ io.on('connection', function (socket) {
                         }
 
                         socket.on('disconnect', function () {
-                            socket.leave(socket.jsonUser.room);
                             let posReady = io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
                             io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posReady, 1);
                             io.emit('disconnectedLobby', {
                                 message: socket.jsonUser.username + ' has disconnect.',
                                 array: io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady
                             })
+                            socket.leave(socket.jsonUser.room);
                         });
 
                         socket.on('startTheGameNow', function (arrayUsersReady) {
