@@ -45,8 +45,16 @@
   </div>
   <button routerLink="/">Back to login</button>
 </div>
-<div *ngIf="multiplayer.winner">
+<div *ngIf="multiplayer.resultGame === 'win'">
   <h1>THE WINNER IS {{multiplayer.winner.user}} with {{multiplayer.winner.points}} points! EASY GAME</h1>
   <img src="./../../assets/marcianito.gif">
   <button class="btn-hover color-2" routerLink="/menu">BACK TO MENU</button>
+</div>
+<div *ngIf="multiplayer.resultGame === 'tied'">
+  <h1>YOU HAVE TIED! FUCK</h1>
+  <ul>
+    <li *ngFor="let user of multiplayer.usersInGame">
+      <span>{{user.user}} : {{user.points}}  </span>
+    </li>
+  </ul>
 </div>

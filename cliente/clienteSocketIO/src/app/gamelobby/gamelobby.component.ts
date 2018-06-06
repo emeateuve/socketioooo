@@ -13,10 +13,14 @@ export class GamelobbyComponent implements OnInit {
 
   public arrayUsuarios;
 
+  public userIsReady = false;
+
   ngOnInit() {
     this.multiplayer.usuarioEstaListo().subscribe((data) => {
       this.arrayUsuarios = data;
     });
+
+    this.multiplayer.connectedLobby();
 
 
     this.multiplayer.allReady().subscribe((data) => {
@@ -26,7 +30,7 @@ export class GamelobbyComponent implements OnInit {
   }
 
   imReady(){
-    this.multiplayer.usuarioReady(this.multiplayer.user);
+    this.multiplayer.usuarioReady();
   }
 
 

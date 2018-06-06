@@ -31,6 +31,7 @@ export class GameComponent implements OnInit {
       this.roomConversation.push(data.message);
     });
     this.multiplayer.gameEnd().subscribe((data) => {    });
+    this.multiplayer.gameEndTied().subscribe((data) => {    });
 
   }
 

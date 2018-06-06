@@ -12,9 +12,6 @@ app.use(express.static('public'));
 var loggedUsers = [];
 var chatUsers = [];
 var readyUsers = [];
-var usersInGame = [];
-
-var round = 0;
 
 var loggedUser = false;
 
@@ -146,12 +143,20 @@ io.on('connection', function (socket) {
         loggedUser = false;
         for (let i = 0; i < loggedUsers.length; i++) {
             if (user === loggedUsers[i].username) {
-                socket.emit('existing-user', user + ' already exists! Try with another username.')
+                socket.emit('existing-user', user + ' already exists! Try with another username.');
                 loggedUser = true;
             }
         }
         if (!loggedUser) {
-            socket.jsonUser = {username: user, room: null, guesser: false, points: 100, round: 0};
+            socket.jsonUser = {
+                username: user,
+                room: null,
+                guesser: false,
+                points: 100,
+                round: 0,
+                isReady: false,
+                usersReady: []
+            };
             loggedUsers.push(socket.jsonUser);
 
             socket.emit("successfull-login", {
@@ -176,135 +181,158 @@ io.on('connection', function (socket) {
                     io.emit('disconnectedChat', {
                         message: socket.jsonUser.username + ' has disconnect.',
                         array: chatUsers
-                    })
-                })
+                    });
+                });
             });
 
-            socket.on('usuarioReady', function (user, room) {
+            socket.on('connected-lobby', function (room) {
                 socket.jsonUser.room = room;
-                let gamerJSON = {
-                    user: user,
-                    room: socket.jsonUser.room,
-                    guesser: socket.jsonUser.guesser,
-                    points: socket.jsonUser.points
-                }
-                if (readyUsers.includes(user)) {
-                    io.emit("userReady", {message: user + ' is ready to rumble!', readyUsers: readyUsers});
-                } else {
-                    readyUsers.push(gamerJSON);
-                    io.emit("userReady", {message: user + ' is ready to rumble!', readyUsers: readyUsers});
-                    socket.join(socket.jsonUser.room);
-                }
+                socket.join(socket.jsonUser.room);
+                // You can create new variables in a room.
+                io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady = [];
+                socket.on('usuarioReady', function () {
+                        let gamerJSON = {
+                            user: socket.jsonUser.username,
+                            room: socket.jsonUser.room,
+                            guesser: socket.jsonUser.guesser,
+                            points: socket.jsonUser.points,
+                        };
 
-                socket.on('disconnect', function () {
-                    if (socket.jsonUser.room !== null) {
-                        socket.leave(socket.jsonUser.room);
-                    }
-                    let posReady = readyUsers.indexOf(socket.jsonUser.username);
-                    readyUsers.splice(posReady, 1);
-                    io.emit('disconnectedLobby', {
-                        message: socket.jsonUser.username + ' has disconnect.',
-                        array: readyUsers
-                    })
-                });
-
-                socket.on('startTheGameNow', function (arrayUsersReady) {
-                    let gameRound = 0;
-                    io.in(socket.jsonUser.room).emit('room-message', 'HOLA A LOS USUARIOS DE: ' + socket.jsonUser.room);
-                    arrayUsersReady[0].guesser = true;
-                    arrayUsersReady[1].guesser = false;
-
-                    io.emit("game-start", {
-                        characters: charactersArray,
-                        usersReady: arrayUsersReady,
-                        randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)]
-                    });
-                    readyUsers = [];
-
-                    socket.on('game-message', function (gameMessage) {
-                        io.emit('new-game-message', socket.jsonUser.username + ': ' + gameMessage)
-                    });
-                    socket.on('delete-character', function (card, array) {
-                        for (let i = 0; i < array.length; i++) {
-                            if (card === array[i].name) {
-                                array[i].display = false;
-                            }
-                        }
-                        io.emit('deleted-character', array);
-                    });
-
-                    socket.on('quitar-hombres', function (array) {
-                        for (let i = 0; i < array.length; i++) {
-                            if (array[i].gender === 'male') {
-                                array[i].display = false;
-                            }
-                        }
-                        io.emit('hombres-quitados', array)
-                    });
-
-                    socket.on('blue-eyes', function (array) {
-                        for (let i = 0; i < array.length; i++) {
-                            if (array[i].eyes === 'blue') {
-                                array[i].display = false;
-                            }
-                        }
-                        io.emit('has-blue-eyes', array)
-                    });
-
-                    socket.on('this-is-the-one', function (card, randomCard, usersInGame) {
-                        console.log('Antes de cambiar: ', usersInGame);
-                        if (card === randomCard.name) {
-                            io.emit('correct-answer', socket.jsonUser.username + ' has guessed who it is!');
-
-                            // for (let i = 0; i < usersInGame.length; i++){
-                            //     if(usersInGame[i].user === socket.jsonUser.username){
-                            //
-                            //     }
-                            // }
-                            if (socket.jsonUser.round < 3) {
-                                for (let i = 0; i < usersInGame.length; i++) {
-                                    socket.jsonUser.points = socket.jsonUser.points + 50;
-                                    usersInGame[i].points = usersInGame[i].points + 50;
-                                    usersInGame[i].guesser = !usersInGame[i].guesser;
-                                    usersInGame[i].round++;
-                                    socket.jsonUser.round++;
+                        if (io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.length === 0) {
+                            io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.push(gamerJSON);
+                            io.in(socket.jsonUser.room).emit('userReady', {
+                                message: socket.jsonUser.username + ' is ready to rumble!',
+                                readyUsers: io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady,
+                                totalRoom: io.sockets.adapter.rooms[socket.jsonUser.room].length
+                            });
+                        } else {
+                            for (let i = 0; i < io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.length; i++) {
+                                if (io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady[i].user === socket.jsonUser.username) {
+                                    io.in(socket.jsonUser.room).emit('userReady', {
+                                        message: socket.jsonUser.username + ' is ready to rumble!',
+                                        readyUsers: io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady,
+                                        totalRoom: io.sockets.adapter.rooms[socket.jsonUser.room].length
+                                    });
+                                } else {
+                                    io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.push(gamerJSON)
                                 }
-                                io.emit('game-start', {
-                                    characters: charactersArray,
-                                    usersReady: usersInGame,
-                                    randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)]
-                                });
-                            } else {
-                                // CHECK WHO IS THE PLAYER WHO HAS MORE POINTS IN USERSINGAME
-                                let winner;
-                                for (let i = 0; i < usersInGame.length; i++){
-                                    if(!winner || parseInt(usersInGame[i].points) > parseInt(winner.points)){
-                                        winner = usersInGame[i]
+                            }
+                        }
+
+                        socket.on('disconnect', function () {
+                            socket.leave(socket.jsonUser.room);
+                            let posReady = io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
+                            io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posReady, 1);
+                            io.emit('disconnectedLobby', {
+                                message: socket.jsonUser.username + ' has disconnect.',
+                                array: io.sockets.adapter.rooms[socket.jsonUser.room].arrayUsersReady
+                            })
+                        });
+
+                        socket.on('startTheGameNow', function (arrayUsersReady) {
+                            io.in(socket.jsonUser.room).emit('room-message', 'HOLA A LOS USUARIOS DE: ' + socket.jsonUser.room);
+                            arrayUsersReady[0].guesser = true;
+                            arrayUsersReady[1].guesser = false;
+
+                            io.in(socket.jsonUser.room).emit("game-start", {
+                                characters: charactersArray,
+                                usersReady: arrayUsersReady,
+                                randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)]
+                            });
+
+                            socket.on('game-message', function (gameMessage) {
+                                io.in(socket.jsonUser.room).emit('new-game-message', socket.jsonUser.username + ': ' + gameMessage)
+                            });
+                            socket.on('delete-character', function (card, array) {
+                                for (let i = 0; i < array.length; i++) {
+                                    if (card === array[i].name) {
+                                        array[i].display = false;
                                     }
                                 }
-                                // console.log('EL MAXIMO DE PUNTOS HA SIDO: ', winner);
-                                io.emit('game-end', {array: usersInGame, winner: winner})
-                            }
-                        } else {
-                            for (let i = 0; i < usersInGame.length; i++) {
-                                if (usersInGame[i].user === socket.jsonUser.username) {
-                                    usersInGame[i].points = usersInGame[i].points - 10;
-                                    io.emit('wrong-answer', {
-                                        array: usersInGame,
-                                        message: socket.jsonUser.username + ' has failed!, ' + card + ' is not the correct card.'
-                                    });
+                                io.in(socket.jsonUser.room).emit('deleted-character', array);
+                            });
+
+                            socket.on('quitar-hombres', function (array) {
+                                for (let i = 0; i < array.length; i++) {
+                                    if (array[i].gender === 'male') {
+                                        array[i].display = false;
+                                    }
                                 }
-                            }
+                                io.in(socket.jsonUser.room).emit('hombres-quitados', array)
+                            });
 
-                        }
-                    });
+                            socket.on('blue-eyes', function (array) {
+                                for (let i = 0; i < array.length; i++) {
+                                    if (array[i].eyes === 'blue') {
+                                        array[i].display = false;
+                                    }
+                                }
+                                io.in(socket.jsonUser.room).emit('has-blue-eyes', array);
+                            });
 
-                    socket.on('disconnect', function () {
-                        socket.leave(socket.jsonUser.room);
-                    })
-                });
-            });
+                            socket.on('this-is-the-one', function (card, randomCard, usersInGame) {
+                                console.log('Antes de cambiar: ', usersInGame);
+                                if (card === randomCard.name) {
+                                    io.in(socket.jsonUser.room).emit('correct-answer', socket.jsonUser.username + ' has guessed who it is!');
+
+                                    if (socket.jsonUser.round < 3) {
+                                        for (let i = 0; i < usersInGame.length; i++) {
+                                            socket.jsonUser.points = socket.jsonUser.points + 50;
+                                            usersInGame[i].points = usersInGame[i].points + 50;
+                                            usersInGame[i].guesser = !usersInGame[i].guesser;
+                                            usersInGame[i].round++;
+                                            socket.jsonUser.round++;
+                                        }
+                                        io.in(socket.jsonUser.room).emit('game-start', {
+                                            characters: charactersArray,
+                                            usersReady: usersInGame,
+                                            randomCard: charactersArray[Math.floor(Math.random() * charactersArray.length)]
+                                        });
+                                    } else {
+                                        let winner;
+                                        if (usersInGame[0].points > usersInGame[1].points) {
+                                            winner = usersInGame[0];
+                                            io.in(socket.jsonUser.room).emit('game-end', {
+                                                array: usersInGame,
+                                                winner: winner
+                                            })
+                                        } else if (usersInGame[0].points === usersInGame[1].points) {
+                                            io.in(socket.jsonUser.room).emit('game-end-tied', usersInGame);
+                                        } else {
+                                            winner = usersInGame[1];
+                                            io.in(socket.jsonUser.room).emit('game-end', {
+                                                array: usersInGame,
+                                                winner: winner
+                                            });
+                                        }
+                                    }
+                                } else {
+                                    for (let i = 0; i < usersInGame.length; i++) {
+                                        if (usersInGame[i].user === socket.jsonUser.username) {
+                                            usersInGame[i].points = usersInGame[i].points - 10;
+                                            io.in(socket.jsonUser.room).emit('wrong-answer', {
+                                                array: usersInGame,
+                                                message: socket.jsonUser.username + ' has failed!, ' + card + ' is not the correct card.'
+                                            });
+                                        }
+                                        ;
+                                    }
+                                    ;
+                                }
+                                ;
+                            });
+
+                            socket.on('disconnect', function () {
+                                socket.leave(socket.jsonUser.room);
+                            });
+                        });
+                    }
+                );
+            })
+
+
         }
+        ;
     });
 
     socket.on('disconnect', function () {

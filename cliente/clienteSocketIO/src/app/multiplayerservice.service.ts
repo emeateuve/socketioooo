@@ -17,11 +17,13 @@ export class MultiplayerserviceService {
 
   public isLogged = false;
 
+  public usersReady = [];
+  public usersInRoom = 0;
 
   public usersInGame = [];
-  public usersReady = [];
   public charactersArray = [];
   public randomCard;
+  public resultGame;
   public winner;
 
   constructor(public router: Router) {
@@ -92,18 +94,25 @@ export class MultiplayerserviceService {
 
   /*                              GAME LOBBY                                     */
 
-  public usuarioReady(mensaje) {
-    this.socket.emit('usuarioReady', mensaje, this.roomName);
+  public connectedLobby(){
+    this.socket.emit('connected-lobby', this.roomName)
+  }
+
+  public usuarioReady() {
+    this.socket.emit('usuarioReady');
   }
 
   public usuarioEstaListo = () => {
     return Observable.create((observer) => {
       this.socket.on('userReady', (data) => {
         observer.next(data);
+        this.usersInRoom = data.totalRoom;
         this.usersReady = data.readyUsers;
+        console.log('ARRAY NUEVO: ', data)
         if (this.usersReady.length >= 2) {
           this.socket.emit('startTheGameNow', this.usersReady);
         }
+
       })
     })
   };
@@ -123,7 +132,7 @@ export class MultiplayerserviceService {
         this.randomCard = data.randomCard;
         this.charactersArray = data.characters;
         this.usersInGame = data.usersReady;
-        console.log('detalles de jugador: ', this.usersInGame);
+        console.log('detalles de jugador: ', this.randomCard);
       });
     });
   };
@@ -212,8 +221,20 @@ export class MultiplayerserviceService {
       this.socket.on('game-end', (data) => {
         observer.next(data);
         this.usersInGame = data.array;
+        this.resultGame = 'win';
         this.winner = data.winner
         // console.log(this.usersInGame)
+      })
+    })
+  };
+
+  public gameEndTied = () => {
+    return Observable.create((observer) => {
+      this.socket.on('game-end-tied', (data) => {
+        observer.next(data);
+        this.usersInGame = data;
+        this.winner = null;
+        this.resultGame = 'tied';
       })
     })
   };
