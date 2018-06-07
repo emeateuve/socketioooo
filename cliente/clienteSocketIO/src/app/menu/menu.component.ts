@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Router} from "@angular/router";
 import {MultiplayerserviceService} from "../multiplayerservice.service";
+import {ISubscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-menu',
@@ -14,7 +15,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   public connected;
   public roomName;
 
-  public successfullLogin;
+  public successfullLogin:ISubscription;
 
   constructor(public router: Router, public multiplayer: MultiplayerserviceService) { }
 

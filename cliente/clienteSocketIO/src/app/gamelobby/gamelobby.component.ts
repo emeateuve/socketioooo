@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import {Router} from "@angular/router";
+import {ISubscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-gamelobby',
@@ -16,9 +17,9 @@ export class GamelobbyComponent implements OnInit, OnDestroy {
 
   public userIsReady = false;
 
-  public usuarioEstaListo;
-  public roomIsFull;
-  public allReady;
+  public usuarioEstaListo:ISubscription;
+  public roomIsFull:ISubscription;
+  public allReady:ISubscription;
 
   ngOnInit() {
     this.usuarioEstaListo = this.multiplayer.usuarioEstaListo().subscribe((data) => {

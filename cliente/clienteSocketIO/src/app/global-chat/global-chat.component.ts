@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import * as socketIo from 'socket.io-client';
 import {Router} from "@angular/router";
+import {ISubscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-global-chat',
@@ -17,9 +18,9 @@ export class GlobalChatComponent implements OnInit, OnDestroy {
 
   public allClientMessages = [];
 
-  public connectedChatUser;
-  public usuarioDesconectadoChat;
-  public newMessage;
+  public connectedChatUser:ISubscription;
+  public usuarioDesconectadoChat:ISubscription;
+  public newMessage:ISubscription;
 
   ngOnInit() {
     this.multiplayer.conexionChat();

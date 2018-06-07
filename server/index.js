@@ -3,6 +3,9 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+
+var emitter = require('events').EventEmitter.prototype._maxListeners = 100;
+emitter._maxListeners = 100;
 app.use(express.static('public'));
 
 /* EJEMPLO ALFONSO */
@@ -232,7 +235,6 @@ io.on('connection', function (socket) {
                             }
 
                             socket.on('startTheGameNow', function (arrayUsersReady) {
-                                console.log(arrayUsersReady)
                                 arrayUsersReady[0].guesser = true;
                                 arrayUsersReady[1].guesser = false;
 
@@ -331,14 +333,24 @@ io.on('connection', function (socket) {
                                                 let posGame = socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
                                                 socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posGame, 1);
                                             }
-                                            console.log('Antes de cambiar');
+
                                             socket.jsonUser.round = 0;
                                             socket.jsonUser.guesser = false;
                                             socket.jsonUser.room = null;
                                             socket.jsonUser.points = 100;
                                             socket.jsonUser.isReady = false;
                                             socket.jsonUser.usersReady = [];
-                                            console.log('Después de cambiar')
+
+                                            socket.removeAllListeners('usuarioReady');
+                                            socket.removeAllListeners('startTheGameNow');
+                                            socket.removeAllListeners('game-message');
+                                            socket.removeAllListeners('delete-character');
+                                            socket.removeAllListeners('delete-men');
+                                            socket.removeAllListeners('delete-women');
+                                            socket.removeAllListeners('delete-blue-eyes');
+                                            socket.removeAllListeners('delete-brown-eyes');
+                                            socket.removeAllListeners('this-is-the-one');
+                                            socket.removeAllListeners('back-to-menu');
                                         })
                                     } else {
                                         for (let i = 0; i < usersInGame.length; i++) {

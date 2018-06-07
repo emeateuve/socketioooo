@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import {Router} from "@angular/router";
 import {NgForm} from "@angular/forms";
+import {ISubscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-main',
