@@ -331,13 +331,14 @@ io.on('connection', function (socket) {
                                                 let posGame = socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
                                                 socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posGame, 1);
                                             }
-
+                                            console.log('Antes de cambiar');
                                             socket.jsonUser.round = 0;
                                             socket.jsonUser.guesser = false;
                                             socket.jsonUser.room = null;
                                             socket.jsonUser.points = 100;
                                             socket.jsonUser.isReady = false;
                                             socket.jsonUser.usersReady = [];
+                                            console.log('Después de cambiar')
                                         })
                                     } else {
                                         for (let i = 0; i < usersInGame.length; i++) {

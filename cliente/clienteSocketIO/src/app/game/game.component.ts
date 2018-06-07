@@ -26,7 +26,6 @@ export class GameComponent implements OnInit, OnDestroy {
   public gameEnd;
   public gameEndTied;
   public disconnectedGame;
-  public gameFinished;
 
   ngOnInit() {
     this.newGameMessage = this.multiplayer.newGameMessage().subscribe((data) => {
@@ -87,6 +86,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('SE DESTRUYE')
     this.newGameMessage.unsubscribe();
 
     this.deletedMen.unsubscribe();

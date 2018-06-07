@@ -271,6 +271,7 @@ export class MultiplayerserviceService {
     this.socket.emit('back-to-menu');
     this.roomName = null;
     this.usersInRoom = 0;
+    this.usersReady = [];
     this.usersInGame = [];
     this.randomCard = null;
     this.resultGame = 'ingame';
