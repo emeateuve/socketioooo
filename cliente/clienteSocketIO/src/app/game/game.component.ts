@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import {Router} from "@angular/router";
+import { ISubscription } from "rxjs/Subscription";
 
 @Component({
   selector: 'app-game',
@@ -15,19 +16,20 @@ export class GameComponent implements OnInit, OnDestroy {
   public inputGame;
   public roomConversation = [];
 
-  public newGameMessage;
-  public deletedMen;
-  public deletedWomen;
-  public deletedBlueEyes;
-  public deletedBrownEyes;
-  public deletedCharacter;
-  public correctAnswer;
-  public wrongAnswer;
-  public gameEnd;
-  public gameEndTied;
-  public disconnectedGame;
+  public newGameMessage:ISubscription;
+  public deletedMen:ISubscription;
+  public deletedWomen:ISubscription;
+  public deletedBlueEyes:ISubscription;
+  public deletedBrownEyes:ISubscription;
+  public deletedCharacter:ISubscription;
+  public correctAnswer:ISubscription;
+  public wrongAnswer:ISubscription;
+  public gameEnd:ISubscription;
+  public gameEndTied:ISubscription;
+  public disconnectedGame:ISubscription;
 
   ngOnInit() {
+
     this.newGameMessage = this.multiplayer.newGameMessage().subscribe((data) => {
       this.roomConversation.push(data);
     });
@@ -86,7 +88,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('SE DESTRUYE')
+
     this.newGameMessage.unsubscribe();
 
     this.deletedMen.unsubscribe();

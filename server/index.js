@@ -327,7 +327,7 @@ io.on('connection', function (socket) {
                                         }
                                         socket.on('back-to-menu', function () {
                                             socket.leave(socket.jsonUser.room);
-                                            if(socket.adapter.rooms.hasOwnProperty(socket.jsonUser.room)) {
+                                            if (socket.adapter.rooms.hasOwnProperty(socket.jsonUser.room)) {
                                                 let posGame = socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
                                                 socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posGame, 1);
                                             }
@@ -359,7 +359,7 @@ io.on('connection', function (socket) {
                                 socket.on('disconnect', function () {
                                     socket.leave(socket.jsonUser.room);
                                     // ARRAY.hasOwnProperty checks if there is a key inside a json. hehe.
-                                    if(socket.adapter.rooms.hasOwnProperty(socket.jsonUser.room)){
+                                    if (socket.adapter.rooms.hasOwnProperty(socket.jsonUser.room)) {
                                         let posGame = socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.indexOf(socket.jsonUser.username);
                                         socket.adapter.rooms[socket.jsonUser.room].arrayUsersReady.splice(posGame, 1);
                                         io.in(socket.jsonUser.room).emit('disconnected-game', {
