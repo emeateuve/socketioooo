@@ -35,7 +35,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\r\nbody {\r\n  background: #FEAC5E;  /* fallback for old browsers */  /* Chrome 10-25, Safari 5.1-6 */\r\n  background: -webkit-gradient(linear, left top, right top, from(#4BC0C8), color-stop(#C779D0), to(#FEAC5E));\r\n  background: linear-gradient(to right, #4BC0C8, #C779D0, #FEAC5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\r\n\r\n}\r\n\r\n", ""]);
 
 // exports
 
