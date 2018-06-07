@@ -1,14 +1,29 @@
-<div class="container mt-5" *ngIf="multiplayer.user">
-  <h1>Room name: {{this.multiplayer.roomName}}</h1>
-  <h1>Waiting for other players to be ready...</h1>
-  <button class="btn-hover color-3" (click)="imReady()">I am ready!</button>
-  <button class="btn-hover color-2" routerLink="/menu">Back to menu</button>
+<div class="jumbotron jumbotron-fluid mt-5" *ngIf="multiplayer.user" style="background: rgba(255,255,255,0.4)">
+  <div class="container-fluid">
+    <h1 class="display-4" style="text-align: center">{{multiplayer.user}} - Room: {{this.multiplayer.roomName}} - Players ready:
+      {{multiplayer.usersInRoom}}/2</h1>
+    <p class="lead" style="text-align: center">Waiting for more players to be ready.</p>
+    <p style="text-align: center">
+      <img class="card-img-top" style="width: 200px; height: 200px;" src="./../../assets/loading.GIF">
+    </p>
 
+    <div class="row">
+      <div class="col-5 ml-5">
+        <button class="btn-hover color-5" (click)="imReady()">I am ready!</button>
+      </div>
+      <div class="col-6 mr-5">
+        <button style="float: right" class="btn-hover color-2" routerLink="/menu">Back to menu</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="!multiplayer.user">
-  <h1>There must be a problem with your user! Try to login again</h1>
-  <button class="btn-hover color-3" routerLink="">Back to Login</button>
+<div class="container mt-5" *ngIf="!multiplayer.user">
+  <p style="text-align: center"><img class="card-img-top" style="height: 200px; width: 200px;" src="./../../assets/nouser.png"></p>
+  <hr>
+  <p style="text-align: center">
+  <h1 class="display-4">There must be a problem with your user! Try to login again.<button class="btn-hover color-3 ml-5" style="float: right" routerLink="">Back to Login</button></h1>
+  <p>
 </div>
 
 

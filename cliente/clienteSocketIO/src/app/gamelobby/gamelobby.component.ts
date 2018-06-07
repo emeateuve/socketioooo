@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import {Router} from "@angular/router";
 
@@ -7,32 +7,45 @@ import {Router} from "@angular/router";
   templateUrl: './gamelobby.component.html',
   styleUrls: ['./gamelobby.component.css']
 })
-export class GamelobbyComponent implements OnInit {
+export class GamelobbyComponent implements OnInit, OnDestroy {
 
-  constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
+  constructor(public multiplayer: MultiplayerserviceService, public router: Router) {
+  }
 
   public arrayUsuarios;
 
   public userIsReady = false;
 
+  public usuarioEstaListo;
+  public roomIsFull;
+  public allReady;
+
   ngOnInit() {
-    this.multiplayer.usuarioEstaListo().subscribe((data) => {
+    this.usuarioEstaListo = this.multiplayer.usuarioEstaListo().subscribe((data) => {
       this.arrayUsuarios = data;
     });
 
     this.multiplayer.connectedLobby();
 
+    this.roomIsFull = this.multiplayer.roomIsFull().subscribe((data) => {
+      alert(data + ' room is full! Try with another one.')
+      this.router.navigateByUrl('/menu');
+    });
 
-    this.multiplayer.allReady().subscribe((data) => {
+    this.allReady = this.multiplayer.allReady().subscribe((data) => {
       this.router.navigateByUrl('/game');
     });
 
   }
 
-  imReady(){
+  imReady() {
     this.multiplayer.usuarioReady();
   }
 
-
+  ngOnDestroy() {
+    this.usuarioEstaListo.unsubscribe();
+    this.roomIsFull.unsubscribe();
+    this.allReady.unsubscribe();
+  }
 
 }

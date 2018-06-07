@@ -36,8 +36,10 @@
   </div>
 </div>
 
-<div *ngIf="!multiplayer.user">
-  <h1>There must be a problem with your user! Try to login again</h1>
-  <button class="btn-hover color-3" routerLink="">Back to Login</button>
+<div class="container mt-5" *ngIf="!multiplayer.user">
+  <p style="text-align: center"><img class="card-img-top" style="height: 200px; width: 200px;" src="./../../assets/nouser.png"></p>
+  <hr>
+  <p style="text-align: center">
+  <h1 class="display-4">There must be a problem with your user! Try to login again.<button class="btn-hover color-3 ml-5" style="float: right" routerLink="">Back to Login</button></h1>
+  <p>
 </div>
-

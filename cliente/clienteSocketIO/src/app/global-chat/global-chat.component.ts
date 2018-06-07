@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import * as socketIo from 'socket.io-client';
 import {Router} from "@angular/router";
@@ -8,7 +8,7 @@ import {Router} from "@angular/router";
   templateUrl: './global-chat.component.html',
   styleUrls: ['./global-chat.component.css']
 })
-export class GlobalChatComponent implements OnInit {
+export class GlobalChatComponent implements OnInit, OnDestroy {
 
   constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
 
@@ -17,18 +17,22 @@ export class GlobalChatComponent implements OnInit {
 
   public allClientMessages = [];
 
+  public connectedChatUser;
+  public usuarioDesconectadoChat;
+  public newMessage;
+
   ngOnInit() {
     this.multiplayer.conexionChat();
 
-    this.multiplayer.connectedChatUser().subscribe((connectedMessage) => {
+    this.connectedChatUser = this.multiplayer.connectedChatUser().subscribe((connectedMessage) => {
       this.allClientMessages.push(connectedMessage.message);
     });
 
-    this.multiplayer.usuarioDesconectadoChat().subscribe((disconnectMessage) => {
+    this.usuarioDesconectadoChat = this.multiplayer.usuarioDesconectadoChat().subscribe((disconnectMessage) => {
       this.allClientMessages.push(disconnectMessage.message);
     });
 
-    this.multiplayer.newMessage().subscribe((newMessage) => {
+    this.newMessage = this.multiplayer.newMessage().subscribe((newMessage) => {
       this.allClientMessages.push(newMessage);
     });
   }
@@ -42,4 +46,9 @@ export class GlobalChatComponent implements OnInit {
     this.router.navigateByUrl('/menu');
   }
 
+  ngOnDestroy(){
+    this.connectedChatUser.unsubscribe();
+    this.usuarioDesconectadoChat.unsubscribe();
+    this.newMessage.unsubscribe();
+  }
 }

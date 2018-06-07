@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Router} from "@angular/router";
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 
@@ -7,21 +7,24 @@ import {MultiplayerserviceService} from "../multiplayerservice.service";
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
 
   public userName;
   public arrayUsernames;
   public connected;
   public roomName;
 
+  public successfullLogin;
+
   constructor(public router: Router, public multiplayer: MultiplayerserviceService) { }
 
   ngOnInit() {
-    this.multiplayer.successfullLogin().subscribe((data) => {
+    this.successfullLogin = this.multiplayer.successfullLogin().subscribe((data) => {
       this.userName = data.user;
       this.arrayUsernames = data.array;
       this.connected = this.multiplayer.isLogged;
     });
+
   }
 
   goToLobby(){
@@ -36,4 +39,7 @@ export class MenuComponent implements OnInit {
     this.router.navigateByUrl('');
   }
 
+  ngOnDestroy(){
+    this.successfullLogin.unsubscribe();
+  }
 }

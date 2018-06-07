@@ -23,7 +23,7 @@ export class MultiplayerserviceService {
   public usersInGame = [];
   public charactersArray = [];
   public randomCard;
-  public resultGame;
+  public resultGame = 'ingame';
   public winner;
 
   constructor(public router: Router) {
@@ -51,6 +51,7 @@ export class MultiplayerserviceService {
     return Observable.create((observer) => {
       this.socket.on('existing-user', (data) => {
         observer.next(data);
+        alert(data + ' :(')
       });
     });
   };
@@ -93,6 +94,13 @@ export class MultiplayerserviceService {
 
 
   /*                              GAME LOBBY                                     */
+  public roomIsFull = () => {
+    return Observable.create((observer) => {
+      this.socket.on('lobby-is-full', (data) => {
+        observer.next(data);
+      });
+    });
+  };
 
   public connectedLobby(){
     this.socket.emit('connected-lobby', this.roomName)
@@ -108,19 +116,10 @@ export class MultiplayerserviceService {
         observer.next(data);
         this.usersInRoom = data.totalRoom;
         this.usersReady = data.readyUsers;
-        console.log('ARRAY NUEVO: ', data)
         if (this.usersReady.length >= 2) {
           this.socket.emit('startTheGameNow', this.usersReady);
         }
 
-      })
-    })
-  };
-
-  public receiveRoomMessage = () => {
-    return Observable.create((observer) => {
-      this.socket.on('room-message', (data) => {
-        observer.next(data);
       })
     })
   };
@@ -132,7 +131,6 @@ export class MultiplayerserviceService {
         this.randomCard = data.randomCard;
         this.charactersArray = data.characters;
         this.usersInGame = data.usersReady;
-        console.log('detalles de jugador: ', this.randomCard);
       });
     });
   };
@@ -149,7 +147,6 @@ export class MultiplayerserviceService {
     return Observable.create((observer) => {
       this.socket.on('new-game-message', (data) => {
         observer.next(data);
-        console.log('Mensaje: ', data.message, ' Usuario: ', data.user);
       })
     })
   };
@@ -167,26 +164,50 @@ export class MultiplayerserviceService {
     })
   };
 
-  public quitarHombres(array) {
-    this.socket.emit('quitar-hombres', array);
+  public deleteMen(array) {
+    this.socket.emit('delete-men', array);
   }
 
-  public blueEyes(array) {
-    this.socket.emit('blue-eyes', array);
+  public deleteWomen(array) {
+    this.socket.emit('delete-women', array);
   }
 
-  public hasBlueEyes = () => {
+  public deleteBlueEyes(array) {
+    this.socket.emit('delete-blue-eyes', array);
+  }
+
+  public deleteBrownEyes(array) {
+    this.socket.emit('delete-brown-eyes', array);
+  }
+
+  public deletedBlueEyes = () => {
     return Observable.create((observer) => {
-      this.socket.on('has-blue-eyes', (data) => {
+      this.socket.on('deleted-blue-eyes', (data) => {
+        observer.next(data);
+        this.charactersArray = data;
+      })
+    })
+  };
+  public deletedBrownEyes = () => {
+    return Observable.create((observer) => {
+      this.socket.on('deleted-brown-eyes', (data) => {
         observer.next(data);
         this.charactersArray = data;
       })
     })
   };
 
-  public arrayEditado = () => {
+  public deletedMen = () => {
     return Observable.create((observer) => {
-      this.socket.on('hombres-quitados', (data) => {
+      this.socket.on('deleted-men', (data) => {
+        observer.next(data);
+        this.charactersArray = data;
+      })
+    })
+  };
+  public deletedWomen = () => {
+    return Observable.create((observer) => {
+      this.socket.on('deleted-women', (data) => {
         observer.next(data);
         this.charactersArray = data;
       })
@@ -201,7 +222,6 @@ export class MultiplayerserviceService {
     return Observable.create((observer) => {
       this.socket.on('correct-answer', (data) => {
         observer.next(data);
-        console.log(data);
       })
     })
   };
@@ -211,7 +231,6 @@ export class MultiplayerserviceService {
       this.socket.on('wrong-answer', (data) => {
         observer.next(data);
         this.usersInGame = data.array;
-        console.log(this.usersInGame)
       })
     })
   };
@@ -223,7 +242,6 @@ export class MultiplayerserviceService {
         this.usersInGame = data.array;
         this.resultGame = 'win';
         this.winner = data.winner
-        // console.log(this.usersInGame)
       })
     })
   };
@@ -239,4 +257,24 @@ export class MultiplayerserviceService {
     })
   };
 
+  public disconnectedGame = () => {
+    return Observable.create((observer) => {
+      this.socket.on('disconnected-game', (data) => {
+        observer.next(data);
+        this.usersInRoom = data.usersInRoom;
+        this.usersInGame = data.array;
+      })
+    })
+  };
+
+  public backToMenu(){
+    this.socket.emit('back-to-menu');
+    this.roomName = null;
+    this.usersInRoom = 0;
+    this.usersInGame = [];
+    this.randomCard = null;
+    this.resultGame = 'ingame';
+    this.winner = null;
+  }
 }
+

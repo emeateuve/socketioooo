@@ -1,15 +1,16 @@
-<div class="container" style="background: rgba(255,255,255,0.5); margin-top: 30vh;">
+<p class="display-4 mt-5" style="text-align: center">Guess who! </p>
+<div class="container" style="background: rgba(255,255,255,0.5); margin-top: 25vh;">
   <form class="col-12 mt-5 pt-3 pb-5" >
     <div class="form-group">
       <p style="text-align: center" for="exampleInputEmail1">Username</p>
-      <input type="email" (keyup)="$event.keyCode == 13 && userLogin()" [(ngModel)]="userName" name="userName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username...">
+      <input type="email" (keyup)="$event.keyCode == 13 && userLogin()" [(ngModel)]="userName" name="userName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username..." required>
       <small id="emailHelp" class="form-text text-muted">Be sure that your username is not registered.</small>
     </div>
     <!--<div class="form-group">-->
       <!--<label for="exampleInputPassword1">Password</label>-->
       <!--<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">-->
     <!--</div>-->
-    <button type="button" class="btn btn-primary col-12" (click)="userLogin()">Login</button>
+    <button *ngIf="userName" type="button" class="btn btn-primary col-12" (click)="userLogin()">Login</button>
     <div *ngIf="alreadyExistsMessage" class="alert alert-danger" role="alert">{{alreadyExistsMessage}}</div>
   </form>
 </div>
