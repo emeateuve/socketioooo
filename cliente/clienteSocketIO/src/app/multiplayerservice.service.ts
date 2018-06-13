@@ -31,10 +31,27 @@ export class MultiplayerserviceService {
   }
 
 
+
+
+  /*                               REGISTER                                 */
+
+  public registerMe(user, password){
+    this.socket.emit('register-user', user, password);
+  }
+
+
   /*                               LOGIN                                  */
 
-  public userLogin(user) {
-    this.socket.emit('user-login', user);
+  public backToLogin = () => {
+    return Observable.create((observer) => {
+      this.socket.on('back-to-login', () => {
+        this.router.navigateByUrl('/');
+      });
+    });
+  };
+
+  public userLogin(user, password) {
+    this.socket.emit('user-login', user, password);
   }
 
   public successfullLogin = () => {
@@ -91,6 +108,25 @@ export class MultiplayerserviceService {
       })
     })
   };
+
+  /*                              MANAGEMENT                                     */
+  public newCharacter(name, hair, eyes, skin, gender, beard){
+    this.socket.emit('new-character', name, hair, eyes, skin, gender, beard);
+  }
+
+  public loadMyCharacters(){
+    this.socket.emit('load-user-characters');
+  }
+
+  public loadedMyCharacters = () => {
+    return Observable.create((observer) => {
+      this.socket.on('loaded-user-characters', (data) => {
+        observer.next(data);
+      });
+    });
+  };
+
+
 
 
   /*                              GAME LOBBY                                     */

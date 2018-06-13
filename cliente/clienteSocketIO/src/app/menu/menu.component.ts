@@ -20,6 +20,8 @@ export class MenuComponent implements OnInit, OnDestroy {
   constructor(public router: Router, public multiplayer: MultiplayerserviceService) { }
 
   ngOnInit() {
+    this.multiplayer.backToLogin().subscribe(() => {  });
+
     this.successfullLogin = this.multiplayer.successfullLogin().subscribe((data) => {
       this.userName = data.user;
       this.arrayUsernames = data.array;

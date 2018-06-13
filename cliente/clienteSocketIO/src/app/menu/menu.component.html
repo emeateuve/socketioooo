@@ -1,14 +1,12 @@
 <div *ngIf="multiplayer.isLogged" class="container">
-  <!--<div class="alert alert-success" role="alert">-->
-    <!--This is a success alert—check it out!-->
-  <!--</div>-->
   <p class="alert alert-success" style="text-align: center">You are logged as {{multiplayer.user}} !</p>
   <p style="text-align: center">Current online players: {{multiplayer.connectedUsers.length}}</p>
   <div id="accordion" class="mt-5">
     <div class="card">
       <div class="card-header" id="headingOne">
         <h5 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                  aria-controls="collapseOne">
             Play the game!
           </button>
         </h5>
@@ -18,11 +16,12 @@
           <form>
             <div class="form-group">
               <label for="exampleInputEmail1">Room name</label>
-              <input type="email" [(ngModel)]="roomName" name="roomName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter room name" required>
+              <input type="email" [(ngModel)]="roomName" name="roomName" class="form-control" id="exampleInputEmail1"
+                     aria-describedby="emailHelp" placeholder="Enter room name" required>
             </div>
             <!--<div class="form-group">-->
-              <!--<label for="exampleInputPassword1">Password</label>-->
-              <!--<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter room password">-->
+            <!--<label for="exampleInputPassword1">Password</label>-->
+            <!--<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter room password">-->
             <!--</div>-->
             <button *ngIf="roomName" type="button" (click)="goToLobby()" class="btn btn-primary col-12">Play</button>
           </form>
@@ -32,7 +31,8 @@
     <div class="card">
       <div class="card-header" id="headingTwo">
         <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                  aria-controls="collapseTwo">
             Chat
           </button>
         </h5>
@@ -47,7 +47,8 @@
     <div class="card">
       <div class="card-header" id="headingThree">
         <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                  aria-expanded="false" aria-controls="collapseThree">
             How to play
           </button>
         </h5>
@@ -58,14 +59,34 @@
         </div>
       </div>
     </div>
+    <div class="card">
+      <div class="card-header" id="headingFour">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false"
+                  aria-controls="collapseFour">
+            Accout management <span class="badge badge-secondary">New!</span>
+          </button>
+        </h5>
+      </div>
+      <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+        <div class="card-body">
+          <button class="btn btn-primary col-12" routerLink="/management">Go to Accout Management</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+
+
 <div class="container mt-5" *ngIf="!multiplayer.isLogged">
-  <p style="text-align: center"><img class="card-img-top" style="height: 200px; width: 200px;" src="./../../assets/nouser.png"></p>
+  <p style="text-align: center"><img class="card-img-top" style="height: 200px; width: 200px;"
+                                     src="./../../assets/nouser.png"></p>
   <hr>
   <p style="text-align: center">
-  <h1 class="display-4">There must be a problem with your user! Try to login again.<button class="btn-hover color-3 ml-5" style="float: right" (click)="goToMain()">Back to Login</button></h1>
+  <h1 class="display-4">There must be a problem with your user! Try to login again.
+    <button class="btn-hover color-3 ml-5" style="float: right" (click)="goToMain()">Back to Login</button>
+  </h1>
   <p>
 </div>
 

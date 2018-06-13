@@ -12,19 +12,23 @@ import {ISubscription} from "rxjs/Subscription";
 export class MainComponent implements OnInit {
 
   public userName;
+  public userPassword;
 
   public alreadyExistsMessage;
 
   constructor(public multiplayer: MultiplayerserviceService, public router: Router) { }
 
   ngOnInit() {
+
+    this.multiplayer.backToLogin().subscribe(() => {  });
+
     this.multiplayer.alreadyExists().subscribe((data) => {
       this.alreadyExistsMessage = data;
     });
   }
 
   userLogin(){
-    this.multiplayer.userLogin(this.userName);
+    this.multiplayer.userLogin(this.userName, this.userPassword);
     this.router.navigateByUrl('/menu');
   }
 

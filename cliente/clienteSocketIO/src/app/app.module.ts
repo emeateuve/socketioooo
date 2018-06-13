@@ -12,6 +12,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { GamelobbyComponent } from './gamelobby/gamelobby.component';
 import { GameComponent } from './game/game.component';
+import { RegisterComponent } from './register/register.component';
+import { ManagementComponent } from './management/management.component';
 
 
 const routes: Routes = [
@@ -19,7 +21,9 @@ const routes: Routes = [
   {path: 'menu', component: MenuComponent},
   {path: 'chat', component: GlobalChatComponent},
   {path: 'lobby', component: GamelobbyComponent},
-  {path: 'game', component: GameComponent}
+  {path: 'game', component: GameComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'management', component: ManagementComponent}
 ];
 
 @NgModule({
@@ -31,7 +35,9 @@ const routes: Routes = [
     HeaderComponent,
     FooterComponent,
     GamelobbyComponent,
-    GameComponent
+    GameComponent,
+    RegisterComponent,
+    ManagementComponent
   ],
   imports: [
     BrowserModule,

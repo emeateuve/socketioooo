@@ -29,7 +29,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public disconnectedGame:ISubscription;
 
   ngOnInit() {
-
+    this.multiplayer.backToLogin().subscribe(() => {  });
     this.newGameMessage = this.multiplayer.newGameMessage().subscribe((data) => {
       this.roomConversation.push(data);
     });

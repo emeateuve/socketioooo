@@ -23,6 +23,8 @@ export class GlobalChatComponent implements OnInit, OnDestroy {
   public newMessage:ISubscription;
 
   ngOnInit() {
+
+    this.multiplayer.backToLogin().subscribe(() => {  });
     this.multiplayer.conexionChat();
 
     this.connectedChatUser = this.multiplayer.connectedChatUser().subscribe((connectedMessage) => {

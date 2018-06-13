@@ -22,6 +22,8 @@ export class GamelobbyComponent implements OnInit, OnDestroy {
   public allReady:ISubscription;
 
   ngOnInit() {
+    this.multiplayer.backToLogin().subscribe(() => {  });
+
     this.usuarioEstaListo = this.multiplayer.usuarioEstaListo().subscribe((data) => {
       this.arrayUsuarios = data;
     });
