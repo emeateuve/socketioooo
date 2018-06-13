@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 
 @Injectable()
 export class MultiplayerserviceService {
-  private url = 'http://localhost:3000';
+  // private url = 'http://localhost:3000';
   private socket;
 
   public user;
@@ -27,7 +27,7 @@ export class MultiplayerserviceService {
   public winner;
 
   constructor(public router: Router) {
-    this.socket = io(this.url);
+    this.socket = io();
   }
 
 
