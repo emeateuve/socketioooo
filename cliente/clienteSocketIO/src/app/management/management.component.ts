@@ -27,10 +27,29 @@ export class ManagementComponent implements OnInit {
 
   public userCharacters = [];
 
+  public inputCurrentPassword;
+  public inputPassword1;
+  public inputPassword2;
+
+  public inputCurrentUsername;
+  public inputPassword3;
+  public inputNewUsername;
+
+
   ngOnInit() {
     this.multiplayer.loadMyCharacters();
     this.multiplayer.loadedMyCharacters().subscribe((data) => {
       this.userCharacters = data;
+    });
+    this.multiplayer.updatedMyCharacters().subscribe((data) => {
+      this.userCharacters = data;
+    });
+
+    this.multiplayer.changedUserPassword().subscribe((data) => {
+      console.log(data)
+    });
+    this.multiplayer.changedUserUsername().subscribe((data) => {
+      console.log(data)
     });
   }
 
@@ -52,5 +71,13 @@ export class ManagementComponent implements OnInit {
 
   createCharacter(){
     this.multiplayer.newCharacter(this.inputName,this.inputHair, this.inputEyes, this.inputSkin, this.inputGender, this.inputBeard);
+  }
+
+  changeUserPassword(){
+    this.multiplayer.changeUserPassword(this.inputCurrentPassword, this.inputPassword1);
+  }
+
+  changeUserUsername(){
+    this.multiplayer.changeUserUsername(this.inputCurrentUsername, this.inputPassword3, this.inputNewUsername);
   }
 }

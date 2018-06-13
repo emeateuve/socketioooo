@@ -61,7 +61,7 @@
       <div class="card-header" id="headingTwo">
         <h5 class="mb-0">
           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Account Settings
+            Characters created by {{multiplayer.user}} (you)
           </button>
         </h5>
       </div>
@@ -74,6 +74,7 @@
                 <img class="card-img-top" src="{{character.image}}" alt="Card image cap">
                 <div class="card-body">
                   <h5 style="text-align: center" class="card-title">{{character.name}}</h5>
+                  <p *ngIf="character.timeCreated">Date Created: {{character.timeCreated}}</p>
                   <!--<p style="text-align: center" class="card-title">Created by: {{character.name}}</p>-->
                   <!--<p>Creator's id: {{character.id}}</p>-->
                 </div>
@@ -87,13 +88,50 @@
       <div class="card-header" id="headingThree">
         <h5 class="mb-0">
           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Collapsible Group Item #3
+            Account settings
           </button>
         </h5>
       </div>
       <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
         <div class="card-body">
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          <div class="row">
+            <div class="col-6">
+              <p class="display-4" style="text-align: center">Change password</p>
+              <form>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Your current password</label>
+                  <input [(ngModel)]="inputCurrentPassword" name = "inputCurrentPassword" type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Current password...">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input [(ngModel)]="inputPassword1" name = "inputPassword1" type="password" class="form-control" id="exampleInputPassword1" placeholder="New password">
+                  <small id="emailHelp3" class="form-text text-muted">Be sure that you want to change your password.</small>
+                  <input [(ngModel)]="inputPassword2" name = "inputPassword2" type="password" class="form-control" id="exampleInputPassword4" placeholder="New password">
+                </div>
+                <button *ngIf="inputCurrentPassword != null && inputPassword1 != null && inputPassword2 != null && inputPassword1 === inputPassword2" (click)="changeUserPassword()" type="button" class="btn btn-primary w-100">Change password</button>
+              </form>
+            </div>
+            <div class="col-6">
+              <p class="display-4" style="text-align: center">Change username</p>
+              <form>
+                <div class="form-group">
+                  <label  for="exampleInputEmail2">Current username</label>
+                  <input [(ngModel)]="inputCurrentUsername" name = "inputCurrentUsername" type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Enter your username...">
+                  <label for="exampleInputPassword3">Password</label>
+                  <input [(ngModel)]="inputPassword3" name = "inputPassword3" type="password" class="form-control" id="exampleInputPassword3" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">New username</label>
+                  <input [(ngModel)]="inputNewUsername" name = "inputNewUsername" type="email" class="form-control" id="exampleInputEmail34" aria-describedby="emailHelp1" placeholder="New username...">
+                  <small id="emailHelp2" class="form-text text-muted">Dont worry, we wont judge you if you are transgender. :-)</small>
+                </div>
+                <button *ngIf="inputCurrentUsername != null && inputPassword3 != null && inputNewUsername != null" (click)="changeUserUsername()" type="button" class="btn btn-primary w-100">Change username</button>
+              </form>
+            </div>
+          </div>
+
+
+
         </div>
       </div>
     </div>

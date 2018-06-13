@@ -27,7 +27,11 @@ var charactersSchema = mongoose.Schema({
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    // timeCreated: {
+    //     type: Date, default: Date.now
+    // }
+    timeCreated: String
 });
 
 var Character = mongoose.model('Character', charactersSchema);
@@ -55,8 +59,8 @@ app.use(express.static('node_modules'));
 
 app.use(express.static('public'));
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
 });
 
 var loggedUsers = [];
@@ -176,6 +180,15 @@ io.on('connection', function (socket) {
                                 if (userResponse === null) {
                                     socket.emit('matrix-error', 'How did you did that?');
                                 } else {
+                                    let charToday = new Date();
+                                    let charDay = charToday.getDate();
+                                    let charMonth = charToday.getMonth();
+                                    let charYear = charToday.getFullYear();
+                                    let charHour = charToday.getHours();
+                                    let charMinutes = charToday.getMinutes();
+                                    let charSeconds = charToday.getSeconds();
+                                    let currentDate = charDay + '/' + (charMonth + 1) + '/' + charYear + ' ' + charHour + ':' + charMinutes + ':' + charSeconds;
+
                                     var newCharacter = new Character({
                                         name: name,
                                         hair: hair,
@@ -185,9 +198,31 @@ io.on('connection', function (socket) {
                                         beard: beard,
                                         image: './assets/Paul.png',
                                         display: true,
-                                        createdBy: userResponse._id
+                                        createdBy: userResponse._id,
+                                        timeCreated: currentDate.toString()
                                     });
                                     newCharacter.save();
+                                    User.findOne({
+                                        username: socket.jsonUser.username
+                                    })
+                                        .exec(function (error, userResponse) {
+                                            if (userResponse === null) {
+                                                console.log('No hay usuario cargando')
+                                            } else {
+                                                Character.find({
+                                                    createdBy: userResponse._id
+                                                })
+                                                    .populate('createdBy')
+                                                    .exec(function (error, updatedCharacters) {
+                                                        if (updatedCharacters === null) {
+                                                            console.log('No se ha podido');
+                                                        } else {
+                                                            socket.emit('updated-user-characters', updatedCharacters)
+                                                        }
+
+                                                    });
+                                            }
+                                        });
                                 }
                             });
 
@@ -196,7 +231,7 @@ io.on('connection', function (socket) {
                         console.log('Existe ya ese personaje locaso');
                     }
                 })
-        })
+        });
         /* FIND CHARACTERS */
 
         socket.on('load-user-characters', function () {
@@ -215,12 +250,45 @@ io.on('connection', function (socket) {
                                 if (charResponse === null) {
                                     console.log('No se ha podido')
                                 } else {
+                                    // console.log(charResponse);
                                     socket.emit('loaded-user-characters', charResponse)
                                 }
 
                             });
                     }
                 });
+        });
+        /* CHANGE USER PASSWORD */
+        socket.on('change-user-password', function (oldPass, newPass) {
+            User.findOne({
+                username: socket.jsonUser.username,
+                password: oldPass
+            })
+                .exec(function (error, userResponse) {
+                    if(userResponse === null){
+                        socket.emit('wrong-password', 'Your password doesnt match with the one that you typed.')
+                    } else {
+                        userResponse.password = newPass;
+                        userResponse.save();
+                        socket.emit('changed-user-password', 'Your password has been changed successfully!')
+                    }
+                })
+        });
+
+        socket.on('change-user-username', function (username, password, newUsername) {
+            User.findOne({
+                username: socket.jsonUser.username && username,
+                password: password
+            })
+                .exec(function (error, userResponse) {
+                    if(userResponse === null){
+                        socket.emit('wrong-password', 'Your password doesnt match with the one that you typed.')
+                    } else {
+                        userResponse.username = newUsername;
+                        userResponse.save();
+                        socket.emit('changed-user-username', 'Your name has been changed successfully!')
+                    }
+                })
         });
 
 

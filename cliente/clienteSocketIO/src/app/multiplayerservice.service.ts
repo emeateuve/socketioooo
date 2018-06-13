@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 
 @Injectable()
 export class MultiplayerserviceService {
-  // private url = 'http://localhost:3000';
+  private url = 'http://localhost:3000';
   private socket;
 
   public user;
@@ -27,7 +27,8 @@ export class MultiplayerserviceService {
   public winner;
 
   constructor(public router: Router) {
-    this.socket = io();
+    this.socket = io(this.url);
+    // this.socket = io();
   }
 
 
@@ -125,8 +126,37 @@ export class MultiplayerserviceService {
       });
     });
   };
+  public updatedMyCharacters = () => {
+    return Observable.create((observer) => {
+      this.socket.on('updated-user-characters', (data) => {
+        observer.next(data);
+      });
+    });
+  };
 
+  public changeUserPassword(oldPass, newPass){
+    this.socket.emit('change-user-password', oldPass, newPass);
+  }
 
+  public changedUserPassword = () => {
+    return Observable.create((observer) => {
+      this.socket.on('changed-user-password', (data) => {
+        observer.next(data);
+      });
+    });
+  };
+
+  public changeUserUsername(username, password, newUsername){
+    this.socket.emit('change-user-username', username, password, newUsername);
+  }
+
+  public changedUserUsername = () => {
+    return Observable.create((observer) => {
+      this.socket.on('changed-user-username', (data) => {
+        observer.next(data);
+      });
+    });
+  };
 
 
   /*                              GAME LOBBY                                     */
