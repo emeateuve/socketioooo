@@ -96,6 +96,8 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__footer_footer_component__ = __webpack_require__("../../../../../src/app/footer/footer.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__gamelobby_gamelobby_component__ = __webpack_require__("../../../../../src/app/gamelobby/gamelobby.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__game_game_component__ = __webpack_require__("../../../../../src/app/game/game.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__register_register_component__ = __webpack_require__("../../../../../src/app/register/register.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__management_management_component__ = __webpack_require__("../../../../../src/app/management/management.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -115,12 +117,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
 var routes = [
     { path: '', component: __WEBPACK_IMPORTED_MODULE_5__main_main_component__["a" /* MainComponent */] },
     { path: 'menu', component: __WEBPACK_IMPORTED_MODULE_6__menu_menu_component__["a" /* MenuComponent */] },
     { path: 'chat', component: __WEBPACK_IMPORTED_MODULE_7__global_chat_global_chat_component__["a" /* GlobalChatComponent */] },
     { path: 'lobby', component: __WEBPACK_IMPORTED_MODULE_11__gamelobby_gamelobby_component__["a" /* GamelobbyComponent */] },
-    { path: 'game', component: __WEBPACK_IMPORTED_MODULE_12__game_game_component__["a" /* GameComponent */] }
+    { path: 'game', component: __WEBPACK_IMPORTED_MODULE_12__game_game_component__["a" /* GameComponent */] },
+    { path: 'register', component: __WEBPACK_IMPORTED_MODULE_13__register_register_component__["a" /* RegisterComponent */] },
+    { path: 'management', component: __WEBPACK_IMPORTED_MODULE_14__management_management_component__["a" /* ManagementComponent */] }
 ];
 var AppModule = /** @class */ (function () {
     function AppModule() {
@@ -135,7 +141,9 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_9__header_header_component__["a" /* HeaderComponent */],
                 __WEBPACK_IMPORTED_MODULE_10__footer_footer_component__["a" /* FooterComponent */],
                 __WEBPACK_IMPORTED_MODULE_11__gamelobby_gamelobby_component__["a" /* GamelobbyComponent */],
-                __WEBPACK_IMPORTED_MODULE_12__game_game_component__["a" /* GameComponent */]
+                __WEBPACK_IMPORTED_MODULE_12__game_game_component__["a" /* GameComponent */],
+                __WEBPACK_IMPORTED_MODULE_13__register_register_component__["a" /* RegisterComponent */],
+                __WEBPACK_IMPORTED_MODULE_14__management_management_component__["a" /* ManagementComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -235,7 +243,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/game/game.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\"\r\n     *ngIf=\"multiplayer.user && multiplayer.resultGame === 'ingame' && multiplayer.usersInRoom >= 2\">\r\n  <div class=\"row\">\r\n    <div class=\"col-md-9\" style=\"height: 100vh;\">\r\n      <div *ngFor=\"let guesser of multiplayer.usersInGame\">\r\n        <div *ngIf=\"guesser.guesser === true && guesser.user === multiplayer.user\"\r\n             style=\"background: rgba(255,255,255,0.4)\">\r\n          <h2 class=\"display-4 ml-4\" *ngIf=\"multiplayer.usersInGame\">You are now the guesser! {{multiplayer.user}}\r\n            Points: {{guesser.points}}</h2>\r\n          <div class=\"row\">\r\n            <div class=\"col-6\">\r\n              <button class=\"btn btn-dark\" style=\"float: right\" (click)=\"deleteMen()\">Not a men</button>\r\n              <button class=\"btn btn-light\" style=\"float: right\" (click)=\"deleteWomen()\">Not a women</button>\r\n            </div>\r\n            <div class=\"col-6\">\r\n              <button class=\"btn btn-light\" style=\"float: left\" (click)=\"deleteBlueEyes()\">Delete blue eyes</button>\r\n              <button class=\"btn btn-dark\" style=\"float: left\" (click)=\"deleteBrownEyes()\">Delete brown eyes</button>\r\n            </div>\r\n            <ul>\r\n              <li *ngFor=\"let card of multiplayer.charactersArray\" style=\"display: inline;\">\r\n                <div class=\"card\"\r\n                     style=\"width: 10rem; display: inline-block; background: rgba(255,255,255,0.4)!important\"\r\n                     *ngIf=\"card.display\">\r\n                  <img class=\"card-img-top\" src=\"{{card.image}}\" alt=\"Card image cap\">\r\n                  <div class=\"card-body\">\r\n                    <h5 style=\"text-align: center\" class=\"card-title\">{{card.name}}</h5>\r\n                    <button (click)=\"deleteCharacter(card.name)\" style=\"width: 100%\" class=\"btn btn-danger\">Delete\r\n                    </button>\r\n                    <button (click)=\"thisIsTheOne(card.name)\" style=\"width: 100%\" class=\"btn btn-success\">This is the\r\n                      one\r\n                    </button>\r\n                  </div>\r\n                </div>\r\n              </li>\r\n            </ul>\r\n          </div>\r\n        </div>\r\n      </div> <!--** GUESSER ** -->\r\n\r\n      <div *ngFor=\"let guesser of multiplayer.usersInGame\">\r\n        <div *ngIf=\"guesser.guesser === false && guesser.user === multiplayer.user\">\r\n          <h2 class=\"display-4 ml-3\" *ngIf=\"multiplayer.usersInGame\">You have the card {{multiplayer.user}}! Points:\r\n            {{guesser.points}}</h2>\r\n          <div class=\"row\">\r\n            <div class=\"col-3 col-md-offset-1\">\r\n              <div class=\"card\" style=\"width: 18rem;\">\r\n                <img class=\"card-img-top\" src=\"{{multiplayer.randomCard.image}}\" alt=\"Card image cap\">\r\n                <div class=\"card-body\">\r\n                  <p style=\"text-align: center;\" class=\"card-text\">{{multiplayer.randomCard.name}}</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n            <div class=\"col-4 col-md-offset-2\">\r\n              <h3 class=\"display-4\">Properties of {{multiplayer.randomCard.name}}:</h3>\r\n              <ul class=\"list-unstyled\">\r\n                <li>Name: {{multiplayer.randomCard.name}}</li>\r\n                <li>Hair color: {{multiplayer.randomCard.hair}}</li>\r\n                <li>Eyes color: {{multiplayer.randomCard.eyes}}</li>\r\n                <li>Skin color: {{multiplayer.randomCard.skin}}</li>\r\n                <li>Gender: {{multiplayer.randomCard.gender}}</li>\r\n                <li>Beard: {{multiplayer.randomCard.beard}}</li>\r\n              </ul>\r\n            </div>\r\n          </div>\r\n\r\n        </div>\r\n      </div> <!--** CARD OWNER ** -->\r\n    </div>\r\n    <div class=\"col-md-3\" style=\"background: rgba(255,255,255, 0.2); height: 100vh\">\r\n      <div class=\"row\">\r\n        <div style=\"height: 94vh\">\r\n          <ul id=\"gameMessages\">\r\n            <li *ngFor=\"let message of roomConversation\" style=\"list-style: none; width: 100%\">{{message}}</li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row mt-2\" style=\"height: 5vh;\">\r\n        <div class=\"input-group\" style=\"width: 100%;\">\r\n          <div class=\"input-group-prepend\">\r\n            <span class=\"input-group-text\" id=\"basic-addon1\">{{multiplayer.user}}:</span>\r\n          </div>\r\n          <input (keyup)=\"$event.keyCode == 13 && gameMessage()\" [(ngModel)]=\"inputGame\" id=\"gameMessage\"\r\n                 name=\"inputGame\" type=\"text\" class=\"form-control\" placeholder=\"Press enter to send your message!\"\r\n                 aria-label=\"Username\">\r\n        </div>\r\n      </div>\r\n    </div> <!--** ROOM CHAT ** -->\r\n  </div>\r\n</div>\r\n\r\n<div class=\"container-fluid\" *ngIf=\"multiplayer.resultGame === 'win'\">\r\n  <div class=\"row mt-5\">\r\n    <p style=\"text-align: center\" class=\"display-2\">CONGRATULATIONS!</p>\r\n    <hr>\r\n    <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 300px; width: 200px\"\r\n                                       src=\"./../../assets/marcianito.gif\"></p>\r\n  </div>\r\n  <div class=\"row mt-5\" style=\"background: rgba(255,255,255,0.5); height: 40vh\">\r\n    <p style=\"text-align: center\" class=\"display-3\">{{multiplayer.winner.user}} won the game with\r\n      {{multiplayer.winner.points}} points!</p>\r\n    <hr>\r\n    <button style=\"width: 100%\" class=\"btn-hover color-2\" (click)=\"backToMenu()\" routerLink=\"/menu\">BACK TO MENU</button>\r\n  </div>\r\n\r\n</div> <!--** SOMEONE WIN ** -->\r\n<div *ngIf=\"multiplayer.resultGame === 'tied'\">\r\n  <div class=\"row mt-5\">\r\n    <p style=\"text-align: center\" class=\"display-2\">Oh no! You tied!</p>\r\n    <hr>\r\n    <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 300px; width: 200px\"\r\n                                       src=\"./../../assets/marcianito.gif\"></p>\r\n  </div>\r\n  <div class=\"row mt-5\" style=\"background: rgba(255,255,255,0.5); height: 40vh\">\r\n    <p style=\"text-align: center\" class=\"display-3\">I wish you more luck the next time!</p>\r\n    <hr>\r\n    <button style=\"width: 100%\" class=\"btn-hover color-2\" (click)=\"backToMenu()\" routerLink=\"/menu\">BACK TO MENU</button>\r\n  </div>\r\n</div> <!--** TIED GAME ** -->\r\n\r\n<div class=\"container mt-5\" *ngIf=\"!multiplayer.user\">\r\n  <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 200px; width: 200px;\"\r\n                                     src=\"./../../assets/nouser.png\"></p>\r\n  <hr>\r\n  <p style=\"text-align: center\">\r\n  <h1 class=\"display-4\">There must be a problem with your user! Try to login again.\r\n    <button class=\"btn-hover color-3 ml-5\" style=\"float: right\" routerLink=\"\">Back to Login</button>\r\n  </h1>\r\n  <p>\r\n</div> <!--** NOT USER ** -->\r\n\r\n<div class=\"container mt-5\" *ngIf=\"multiplayer.user && multiplayer.usersInRoom < 2\">\r\n  <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 200px; width: 200px;\"\r\n                                     src=\"./../../assets/619.gif\"></p>\r\n  <hr>\r\n  <p style=\"text-align: center\">\r\n  <h1 class=\"display-4\">HA! Your enemy left the game. YOU WIN THIS TIME.\r\n    <button class=\"btn-hover color-3 ml-5\" style=\"float: right\" routerLink=\"menu\">Back to Menu</button>\r\n  </h1>\r\n  <p>\r\n</div> <!--** ENEMY LEFT THE GAME ** -->\r\n"
+module.exports = "<div class=\"container-fluid\"\r\n     *ngIf=\"multiplayer.user && multiplayer.resultGame === 'ingame' && multiplayer.usersInRoom >= 2\">\r\n  <div class=\"row\">\r\n    <div class=\"col-md-9\" style=\"height: 100vh;\">\r\n      <div *ngFor=\"let guesser of multiplayer.usersInGame\">\r\n        <div *ngIf=\"guesser.guesser === true && guesser.user === multiplayer.user\"\r\n             style=\"background: rgba(255,255,255,0.4)\">\r\n          <h2 class=\"display-4 ml-4\" *ngIf=\"multiplayer.usersInGame\">You are now the guesser! {{multiplayer.user}}\r\n            Points: {{guesser.points}}</h2>\r\n          <div class=\"row\">\r\n            <div class=\"col-6\">\r\n              <button class=\"btn btn-dark\" style=\"float: right\" (click)=\"deleteMen()\">Not a men</button>\r\n              <button class=\"btn btn-light\" style=\"float: right\" (click)=\"deleteWomen()\">Not a women</button>\r\n            </div>\r\n            <div class=\"col-6\">\r\n              <button class=\"btn btn-light\" style=\"float: left\" (click)=\"deleteBlueEyes()\">Delete blue eyes</button>\r\n              <button class=\"btn btn-dark\" style=\"float: left\" (click)=\"deleteBrownEyes()\">Delete brown eyes</button>\r\n            </div>\r\n            <ul>\r\n              <li *ngFor=\"let card of multiplayer.charactersArray\" style=\"display: inline;\">\r\n                <div class=\"card\"\r\n                     style=\"width: 10rem; display: inline-block; background: rgba(255,255,255,0.4)!important\"\r\n                     *ngIf=\"card.display\">\r\n                  <img class=\"card-img-top\" src=\"{{card.image}}\" alt=\"Card image cap\">\r\n                  <div class=\"card-body\">\r\n                    <h5 style=\"text-align: center\" class=\"card-title\">{{card.name}}</h5>\r\n                    <button (click)=\"deleteCharacter(card.name)\" style=\"width: 100%\" class=\"btn btn-danger\">Delete\r\n                    </button>\r\n                    <button (click)=\"thisIsTheOne(card.name)\" style=\"width: 100%\" class=\"btn btn-success\">This is the\r\n                      one\r\n                    </button>\r\n                  </div>\r\n                </div>\r\n              </li>\r\n            </ul>\r\n          </div>\r\n        </div>\r\n      </div> <!--** GUESSER ** -->\r\n\r\n      <div *ngFor=\"let guesser of multiplayer.usersInGame\">\r\n        <div *ngIf=\"guesser.guesser === false && guesser.user === multiplayer.user\">\r\n          <h2 class=\"display-4 ml-3\" *ngIf=\"multiplayer.usersInGame\">You have the card {{multiplayer.user}}! Points:\r\n            {{guesser.points}}</h2>\r\n          <div class=\"row\">\r\n            <div class=\"col-3 col-md-offset-1\">\r\n              <div class=\"card\" style=\"width: 18rem;\">\r\n                <img class=\"card-img-top\" src=\"{{multiplayer.randomCard.image}}\" alt=\"Card image cap\">\r\n                <div class=\"card-body\">\r\n                  <p style=\"text-align: center;\" class=\"card-text\">{{multiplayer.randomCard.name}}</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n            <div class=\"col-4 col-md-offset-2\">\r\n              <h3 class=\"display-4\">Properties of {{multiplayer.randomCard.name}}:</h3>\r\n              <ul class=\"list-unstyled\">\r\n                <li>Name: {{multiplayer.randomCard.name}}</li>\r\n                <li>Hair color: {{multiplayer.randomCard.hair}}</li>\r\n                <li>Eyes color: {{multiplayer.randomCard.eyes}}</li>\r\n                <li>Skin color: {{multiplayer.randomCard.skin}}</li>\r\n                <li>Gender: {{multiplayer.randomCard.gender}}</li>\r\n                <li>Beard: {{multiplayer.randomCard.beard}}</li>\r\n              </ul>\r\n            </div>\r\n          </div>\r\n\r\n        </div>\r\n      </div> <!--** CARD OWNER ** -->\r\n    </div>\r\n    <div class=\"col-md-3\" style=\"background: rgba(255,255,255, 0.2); height: 100vh\">\r\n      <div class=\"row\">\r\n        <div style=\"height: 94vh\">\r\n          <ul id=\"gameMessages\">\r\n            <li *ngFor=\"let message of roomConversation\" style=\"list-style: none; width: 100%\">{{message}}</li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row mt-2\" style=\"height: 5vh;\">\r\n        <div class=\"input-group\" style=\"width: 100%;\">\r\n          <div class=\"input-group-prepend\">\r\n            <span class=\"input-group-text\" id=\"basic-addon1\">{{multiplayer.user}}:</span>\r\n          </div>\r\n          <input (keyup)=\"$event.keyCode == 13 && gameMessage()\" [(ngModel)]=\"inputGame\" id=\"gameMessage\"\r\n                 name=\"inputGame\" type=\"text\" class=\"form-control\" placeholder=\"Press enter to send your message!\"\r\n                 aria-label=\"Username\">\r\n        </div>\r\n      </div>\r\n    </div> <!--** ROOM CHAT ** -->\r\n  </div>\r\n</div>\r\n\r\n<div class=\"container-fluid\" *ngIf=\"multiplayer.resultGame === 'win'\">\r\n  <div class=\"row mt-5\">\r\n    <p style=\"text-align: center\" class=\"display-2\">CONGRATULATIONS!</p>\r\n    <hr>\r\n    <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 300px; width: 200px\"\r\n                                       src=\"./../../assets/marcianito.gif\"></p>\r\n  </div>\r\n  <div class=\"row mt-5\" style=\"background: rgba(255,255,255,0.5); height: 40vh\">\r\n    <p style=\"text-align: center\" class=\"display-3\">{{multiplayer.winner.user}} won the game with\r\n      {{multiplayer.winner.points}} points!</p>\r\n    <hr>\r\n    <button style=\"width: 100%\" class=\"btn-hover color-2\" (click)=\"backToMenu()\" routerLink=\"/menu\">BACK TO MENU</button>\r\n  </div>\r\n\r\n</div> <!--** SOMEONE WIN ** -->\r\n<div *ngIf=\"multiplayer.resultGame === 'tied'\">\r\n  <div class=\"row mt-5\">\r\n    <p style=\"text-align: center\" class=\"display-2\">Oh no! You tied!</p>\r\n    <hr>\r\n    <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 300px; width: 200px\"\r\n                                       src=\"./../../assets/marcianito.gif\"></p>\r\n  </div>\r\n  <div class=\"row mt-5\" style=\"background: rgba(255,255,255,0.5); height: 40vh\">\r\n    <p style=\"text-align: center\" class=\"display-3\">I wish you more luck the next time!</p>\r\n    <hr>\r\n    <button style=\"width: 100%\" class=\"btn-hover color-2\" (click)=\"backToMenu()\" routerLink=\"/menu\">BACK TO MENU</button>\r\n  </div>\r\n</div> <!--** TIED GAME ** -->\r\n\r\n<div class=\"container mt-5\" *ngIf=\"!multiplayer.user\">\r\n  <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 200px; width: 200px;\"\r\n                                     src=\"./../../assets/nouser.png\"></p>\r\n  <hr>\r\n  <p style=\"text-align: center\">\r\n  <h1 class=\"display-4\">There must be a problem with your user! Try to login again.\r\n    <button class=\"btn-hover color-3 ml-5\" style=\"float: right\" routerLink=\"\">Back to Login</button>\r\n  </h1>\r\n  <p>\r\n</div> <!--** NOT USER ** -->\r\n\r\n<div class=\"container mt-5\" *ngIf=\"multiplayer.user && multiplayer.usersInRoom < 2\">\r\n  <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 200px; width: 200px;\"\r\n                                     src=\"./../../assets/619.gif\"></p>\r\n  <hr>\r\n  <p style=\"text-align: center\">\r\n  <h1 class=\"display-4\">HA! Your enemy left the game. YOU WIN THIS TIME.\r\n    <button class=\"btn-hover color-3 ml-5\" style=\"float: right\" routerLink=\"/menu\">Back to Menu</button>\r\n  </h1>\r\n  <p>\r\n</div> <!--** ENEMY LEFT THE GAME ** -->\r\n"
 
 /***/ }),
 
@@ -267,6 +275,7 @@ var GameComponent = /** @class */ (function () {
     }
     GameComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.multiplayer.backToLogin().subscribe(function () { });
         this.newGameMessage = this.multiplayer.newGameMessage().subscribe(function (data) {
             _this.roomConversation.push(data);
         });
@@ -391,6 +400,7 @@ var GamelobbyComponent = /** @class */ (function () {
     }
     GamelobbyComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.multiplayer.backToLogin().subscribe(function () { });
         this.usuarioEstaListo = this.multiplayer.usuarioEstaListo().subscribe(function (data) {
             _this.arrayUsuarios = data;
         });
@@ -479,6 +489,7 @@ var GlobalChatComponent = /** @class */ (function () {
     }
     GlobalChatComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.multiplayer.backToLogin().subscribe(function () { });
         this.multiplayer.conexionChat();
         this.connectedChatUser = this.multiplayer.connectedChatUser().subscribe(function (connectedMessage) {
             _this.allClientMessages.push(connectedMessage.message);
@@ -599,7 +610,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/main/main.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p class=\"display-4 mt-5\" style=\"text-align: center\">Guess who! </p>\r\n<div class=\"container\" style=\"background: rgba(255,255,255,0.5); margin-top: 25vh;\">\r\n  <form class=\"col-12 mt-5 pt-3 pb-5\" >\r\n    <div class=\"form-group\">\r\n      <p style=\"text-align: center\" for=\"exampleInputEmail1\">Username</p>\r\n      <input type=\"email\" (keyup)=\"$event.keyCode == 13 && userLogin()\" [(ngModel)]=\"userName\" name=\"userName\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" placeholder=\"Enter username...\" required>\r\n      <small id=\"emailHelp\" class=\"form-text text-muted\">Be sure that your username is not registered.</small>\r\n    </div>\r\n    <!--<div class=\"form-group\">-->\r\n      <!--<label for=\"exampleInputPassword1\">Password</label>-->\r\n      <!--<input type=\"password\" class=\"form-control\" id=\"exampleInputPassword1\" placeholder=\"Password\">-->\r\n    <!--</div>-->\r\n    <button *ngIf=\"userName\" type=\"button\" class=\"btn btn-primary col-12\" (click)=\"userLogin()\">Login</button>\r\n    <div *ngIf=\"alreadyExistsMessage\" class=\"alert alert-danger\" role=\"alert\">{{alreadyExistsMessage}}</div>\r\n  </form>\r\n</div>\r\n"
+module.exports = "<p class=\"display-4 mt-5\" style=\"text-align: center\">Guess who! </p>\r\n<div class=\"container\" style=\"background: rgba(255,255,255,0.5); margin-top: 25vh;\">\r\n  <form class=\"col-12 mt-5 pt-3 pb-5\" >\r\n    <div class=\"form-group\">\r\n      <p style=\"text-align: center\" for=\"exampleInputEmail1\">Username</p>\r\n      <input type=\"email\" (keyup)=\"$event.keyCode == 13 && userLogin()\" [(ngModel)]=\"userName\" name=\"userName\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" placeholder=\"Enter username...\" required>\r\n      <small id=\"emailHelp\" class=\"form-text text-muted\">Be sure that your username is not registered.</small>\r\n      <p style=\"text-align: center\" for=\"exampleInputEmail1\">Username</p>\r\n      <input type=\"password\" (keyup)=\"$event.keyCode == 13 && userLogin()\" [(ngModel)]=\"userPassword\" name=\"userPassword\" class=\"form-control\" id=\"password\" aria-describedby=\"emailHelp\" placeholder=\"Enter password...\" required>\r\n    </div>\r\n    <!--<div class=\"form-group\">-->\r\n      <!--<label for=\"exampleInputPassword1\">Password</label>-->\r\n      <!--<input type=\"password\" class=\"form-control\" id=\"exampleInputPassword1\" placeholder=\"Password\">-->\r\n    <!--</div>-->\r\n    <button *ngIf=\"userName && userPassword\" type=\"button\" class=\"btn btn-primary col-12\" (click)=\"userLogin()\">Login</button>\r\n    <div *ngIf=\"alreadyExistsMessage\" class=\"alert alert-danger\" role=\"alert\">{{alreadyExistsMessage}}</div>\r\n\r\n    <hr>\r\n    <button class=\"btn btn-info w-100\" routerLink=\"register\">Not registered yet?</button>\r\n  </form>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -630,12 +641,13 @@ var MainComponent = /** @class */ (function () {
     }
     MainComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.multiplayer.backToLogin().subscribe(function () { });
         this.multiplayer.alreadyExists().subscribe(function (data) {
             _this.alreadyExistsMessage = data;
         });
     };
     MainComponent.prototype.userLogin = function () {
-        this.multiplayer.userLogin(this.userName);
+        this.multiplayer.userLogin(this.userName, this.userPassword);
         this.router.navigateByUrl('/menu');
     };
     MainComponent = __decorate([
@@ -647,6 +659,102 @@ var MainComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__multiplayerservice_service__["a" /* MultiplayerserviceService */], __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* Router */]])
     ], MainComponent);
     return MainComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "../../../../../src/app/management/management.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/management/management.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"container\">\r\n  <div id=\"accordion\">\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingOne\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link\" data-toggle=\"collapse\" data-target=\"#collapseOne\" aria-expanded=\"true\" aria-controls=\"collapseOne\">\r\n            Create a new character\r\n          </button>\r\n        </h5>\r\n      </div>\r\n\r\n      <div id=\"collapseOne\" class=\"collapse show\" aria-labelledby=\"headingOne\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <form>\r\n            <div class=\"form-row\">\r\n              <div class=\"form-group col-md-12\">\r\n                <label for=\"inputEmail4\">Name</label>\r\n                <input [(ngModel)]=\"inputName\" name=\"inputName\" type=\"email\" class=\"form-control\" id=\"inputEmail4\" placeholder=\"Character name\">\r\n              </div>\r\n            </div>\r\n            <div class=\"form-row\">\r\n              <div class=\"form-group col-md-4\">\r\n                <label for=\"inputHair\">Hair color</label>\r\n                <select [ngModel]=\"inputHair\" (change)=\"changeHair($event.target.value)\" name=\"inputHair\" id=\"inputHair\" class=\"form-control\">\r\n                  <option *ngFor=\"let option of characterExampleHair\" [value]=\"option\">{{option}}</option>\r\n                </select>\r\n              </div>\r\n              <div class=\"form-group col-md-4\">\r\n                <label for=\"inputEyes\">Eyes color</label>\r\n                <select [ngModel]=\"inputEyes\" (change)=\"changeEyes($event.target.value)\" name=\"inputEyes\" id=\"inputEyes\" class=\"form-control\">\r\n                  <option *ngFor=\"let option of characterExampleEyes\" [value]=\"option\">{{option}}</option>\r\n                </select>\r\n              </div>\r\n              <div class=\"form-group col-md-4\">\r\n                <label for=\"inputSkin\">Skin color</label>\r\n                <select [ngModel]=\"inputSkin\" (change)=\"changeSkin($event.target.value)\" name=\"inputSkin\" id=\"inputSkin\" class=\"form-control\">\r\n                  <option *ngFor=\"let option of characterExampleSkin\" [value]=\"option\">{{option}}</option>\r\n                </select>\r\n              </div>\r\n            </div>\r\n            <div class=\"form-row\">\r\n              <div class=\"form-group col-md-6\">\r\n                <label for=\"inputGender\">Gender</label>\r\n                <select [ngModel]=\"inputGender\" (change)=\"changeGender($event.target.value)\" name=\"inputGender\" id=\"inputGender\" class=\"form-control\">\r\n                  <option *ngFor=\"let option of characterExampleGender\" [value]=\"option\">{{option}}</option>\r\n                </select>\r\n              </div>\r\n              <div class=\"form-group col-md-6\">\r\n                <label for=\"inputBeard\">Has a beard</label>\r\n                <select [ngModel]=\"inputBeard\" (change)=\"changeBeard($event.target.value)\" name=\"inputBeard\" id=\"inputBeard\" class=\"form-control\">\r\n                  <option *ngFor=\"let option of characterExampleBeard\" [value]=\"option\">{{option}}</option>\r\n                </select>\r\n              </div>\r\n            </div>\r\n            <button *ngIf=\"inputName && inputHair && inputEyes && inputSkin && inputGender && inputBeard\" type=\"button\" class=\"btn btn-primary w-100\" (click)=\"createCharacter()\">Create new character!</button>\r\n          </form>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingTwo\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseTwo\" aria-expanded=\"false\" aria-controls=\"collapseTwo\">\r\n            Account Settings\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <ul>\r\n            <li *ngFor=\"let character of userCharacters\" style=\"display: inline;\">\r\n              <div class=\"card\"\r\n                   style=\"width: 10rem; display: inline-block; background: rgba(255,255,255,0.4)!important\">\r\n                <img class=\"card-img-top\" src=\"{{character.image}}\" alt=\"Card image cap\">\r\n                <div class=\"card-body\">\r\n                  <h5 style=\"text-align: center\" class=\"card-title\">{{character.name}}</h5>\r\n                  <!--<p style=\"text-align: center\" class=\"card-title\">Created by: {{character.name}}</p>-->\r\n                  <!--<p>Creator's id: {{character.id}}</p>-->\r\n                </div>\r\n              </div>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingThree\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseThree\" aria-expanded=\"false\" aria-controls=\"collapseThree\">\r\n            Collapsible Group Item #3\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseThree\" class=\"collapse\" aria-labelledby=\"headingThree\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/management/management.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ManagementComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__multiplayerservice_service__ = __webpack_require__("../../../../../src/app/multiplayerservice.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var ManagementComponent = /** @class */ (function () {
+    function ManagementComponent(multiplayer, route) {
+        this.multiplayer = multiplayer;
+        this.route = route;
+        this.characterExampleHair = ['blonde', 'dark', 'red', 'bold'];
+        this.characterExampleEyes = ['blue', 'brown'];
+        this.characterExampleSkin = ['black', 'white'];
+        this.characterExampleGender = ['male', 'female'];
+        this.characterExampleBeard = [true, false];
+        this.userCharacters = [];
+    }
+    ManagementComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.multiplayer.loadMyCharacters();
+        this.multiplayer.loadedMyCharacters().subscribe(function (data) {
+            _this.userCharacters = data;
+        });
+    };
+    ManagementComponent.prototype.changeHair = function (input) {
+        this.inputHair = input;
+    };
+    ManagementComponent.prototype.changeEyes = function (input) {
+        this.inputEyes = input;
+    };
+    ManagementComponent.prototype.changeSkin = function (input) {
+        this.inputSkin = input;
+    };
+    ManagementComponent.prototype.changeGender = function (input) {
+        this.inputGender = input;
+    };
+    ManagementComponent.prototype.changeBeard = function (input) {
+        this.inputBeard = input;
+    };
+    ManagementComponent.prototype.createCharacter = function () {
+        this.multiplayer.newCharacter(this.inputName, this.inputHair, this.inputEyes, this.inputSkin, this.inputGender, this.inputBeard);
+    };
+    ManagementComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-management',
+            template: __webpack_require__("../../../../../src/app/management/management.component.html"),
+            styles: [__webpack_require__("../../../../../src/app/management/management.component.css")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__multiplayerservice_service__["a" /* MultiplayerserviceService */], __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* Router */]])
+    ], ManagementComponent);
+    return ManagementComponent;
 }());
 
 
@@ -674,7 +782,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/menu/menu.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"multiplayer.isLogged\" class=\"container\">\r\n  <!--<div class=\"alert alert-success\" role=\"alert\">-->\r\n    <!--This is a success alert—check it out!-->\r\n  <!--</div>-->\r\n  <p class=\"alert alert-success\" style=\"text-align: center\">You are logged as {{multiplayer.user}} !</p>\r\n  <p style=\"text-align: center\">Current online players: {{multiplayer.connectedUsers.length}}</p>\r\n  <div id=\"accordion\" class=\"mt-5\">\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingOne\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link\" data-toggle=\"collapse\" data-target=\"#collapseOne\" aria-expanded=\"true\" aria-controls=\"collapseOne\">\r\n            Play the game!\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseOne\" class=\"collapse show\" aria-labelledby=\"headingOne\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <form>\r\n            <div class=\"form-group\">\r\n              <label for=\"exampleInputEmail1\">Room name</label>\r\n              <input type=\"email\" [(ngModel)]=\"roomName\" name=\"roomName\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" placeholder=\"Enter room name\" required>\r\n            </div>\r\n            <!--<div class=\"form-group\">-->\r\n              <!--<label for=\"exampleInputPassword1\">Password</label>-->\r\n              <!--<input type=\"password\" class=\"form-control\" id=\"exampleInputPassword1\" placeholder=\"Enter room password\">-->\r\n            <!--</div>-->\r\n            <button *ngIf=\"roomName\" type=\"button\" (click)=\"goToLobby()\" class=\"btn btn-primary col-12\">Play</button>\r\n          </form>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingTwo\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseTwo\" aria-expanded=\"false\" aria-controls=\"collapseTwo\">\r\n            Chat\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <p>Chat now with everyone who is connected!</p>\r\n          <button type=\"button\" (click)=\"goToChat()\" class=\"btn btn-primary col-12\">Chat now!</button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingThree\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseThree\" aria-expanded=\"false\" aria-controls=\"collapseThree\">\r\n            How to play\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseThree\" class=\"collapse\" aria-labelledby=\"headingThree\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          There are 2 roles in this game: Guesser and Card Owner.\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<div class=\"container mt-5\" *ngIf=\"!multiplayer.isLogged\">\r\n  <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 200px; width: 200px;\" src=\"./../../assets/nouser.png\"></p>\r\n  <hr>\r\n  <p style=\"text-align: center\">\r\n  <h1 class=\"display-4\">There must be a problem with your user! Try to login again.<button class=\"btn-hover color-3 ml-5\" style=\"float: right\" (click)=\"goToMain()\">Back to Login</button></h1>\r\n  <p>\r\n</div>\r\n\r\n"
+module.exports = "<div *ngIf=\"multiplayer.isLogged\" class=\"container\">\r\n  <p class=\"alert alert-success\" style=\"text-align: center\">You are logged as {{multiplayer.user}} !</p>\r\n  <p style=\"text-align: center\">Current online players: {{multiplayer.connectedUsers.length}}</p>\r\n  <div id=\"accordion\" class=\"mt-5\">\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingOne\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link\" data-toggle=\"collapse\" data-target=\"#collapseOne\" aria-expanded=\"true\"\r\n                  aria-controls=\"collapseOne\">\r\n            Play the game!\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseOne\" class=\"collapse show\" aria-labelledby=\"headingOne\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <form>\r\n            <div class=\"form-group\">\r\n              <label for=\"exampleInputEmail1\">Room name</label>\r\n              <input type=\"email\" [(ngModel)]=\"roomName\" name=\"roomName\" class=\"form-control\" id=\"exampleInputEmail1\"\r\n                     aria-describedby=\"emailHelp\" placeholder=\"Enter room name\" required>\r\n            </div>\r\n            <!--<div class=\"form-group\">-->\r\n            <!--<label for=\"exampleInputPassword1\">Password</label>-->\r\n            <!--<input type=\"password\" class=\"form-control\" id=\"exampleInputPassword1\" placeholder=\"Enter room password\">-->\r\n            <!--</div>-->\r\n            <button *ngIf=\"roomName\" type=\"button\" (click)=\"goToLobby()\" class=\"btn btn-primary col-12\">Play</button>\r\n          </form>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingTwo\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseTwo\" aria-expanded=\"false\"\r\n                  aria-controls=\"collapseTwo\">\r\n            Chat\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <p>Chat now with everyone who is connected!</p>\r\n          <button type=\"button\" (click)=\"goToChat()\" class=\"btn btn-primary col-12\">Chat now!</button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingThree\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseThree\"\r\n                  aria-expanded=\"false\" aria-controls=\"collapseThree\">\r\n            How to play\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseThree\" class=\"collapse\" aria-labelledby=\"headingThree\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          There are 2 roles in this game: Guesser and Card Owner.\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"card\">\r\n      <div class=\"card-header\" id=\"headingFour\">\r\n        <h5 class=\"mb-0\">\r\n          <button class=\"btn btn-link collapsed\" data-toggle=\"collapse\" data-target=\"#collapseFour\" aria-expanded=\"false\"\r\n                  aria-controls=\"collapseFour\">\r\n            Accout management <span class=\"badge badge-secondary\">New!</span>\r\n          </button>\r\n        </h5>\r\n      </div>\r\n      <div id=\"collapseFour\" class=\"collapse\" aria-labelledby=\"headingFour\" data-parent=\"#accordion\">\r\n        <div class=\"card-body\">\r\n          <button class=\"btn btn-primary col-12\" routerLink=\"/management\">Go to Accout Management</button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n\r\n\r\n<div class=\"container mt-5\" *ngIf=\"!multiplayer.isLogged\">\r\n  <p style=\"text-align: center\"><img class=\"card-img-top\" style=\"height: 200px; width: 200px;\"\r\n                                     src=\"./../../assets/nouser.png\"></p>\r\n  <hr>\r\n  <p style=\"text-align: center\">\r\n  <h1 class=\"display-4\">There must be a problem with your user! Try to login again.\r\n    <button class=\"btn-hover color-3 ml-5\" style=\"float: right\" (click)=\"goToMain()\">Back to Login</button>\r\n  </h1>\r\n  <p>\r\n</div>\r\n\r\n"
 
 /***/ }),
 
@@ -705,6 +813,7 @@ var MenuComponent = /** @class */ (function () {
     }
     MenuComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.multiplayer.backToLogin().subscribe(function () { });
         this.successfullLogin = this.multiplayer.successfullLogin().subscribe(function (data) {
             _this.userName = data.user;
             _this.arrayUsernames = data.array;
@@ -775,6 +884,14 @@ var MultiplayerserviceService = /** @class */ (function () {
         this.usersInGame = [];
         this.charactersArray = [];
         this.resultGame = 'ingame';
+        /*                               LOGIN                                  */
+        this.backToLogin = function () {
+            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].create(function (observer) {
+                _this.socket.on('back-to-login', function () {
+                    _this.router.navigateByUrl('/');
+                });
+            });
+        };
         this.successfullLogin = function () {
             return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].create(function (observer) {
                 _this.socket.on('successfull-login', function (jsonUser) {
@@ -812,6 +929,13 @@ var MultiplayerserviceService = /** @class */ (function () {
         this.newMessage = function () {
             return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].create(function (observer) {
                 _this.socket.on('new-message', function (data) {
+                    observer.next(data);
+                });
+            });
+        };
+        this.loadedMyCharacters = function () {
+            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["a" /* Observable */].create(function (observer) {
+                _this.socket.on('loaded-user-characters', function (data) {
                     observer.next(data);
                 });
             });
@@ -939,9 +1063,12 @@ var MultiplayerserviceService = /** @class */ (function () {
         };
         this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__(this.url);
     }
-    /*                               LOGIN                                  */
-    MultiplayerserviceService.prototype.userLogin = function (user) {
-        this.socket.emit('user-login', user);
+    /*                               REGISTER                                 */
+    MultiplayerserviceService.prototype.registerMe = function (user, password) {
+        this.socket.emit('register-user', user, password);
+    };
+    MultiplayerserviceService.prototype.userLogin = function (user, password) {
+        this.socket.emit('user-login', user, password);
     };
     /*                                 CHAT                                       */
     MultiplayerserviceService.prototype.conexionChat = function () {
@@ -951,6 +1078,13 @@ var MultiplayerserviceService = /** @class */ (function () {
         this.socket.emit('message', message);
     };
     ;
+    /*                              MANAGEMENT                                     */
+    MultiplayerserviceService.prototype.newCharacter = function (name, hair, eyes, skin, gender, beard) {
+        this.socket.emit('new-character', name, hair, eyes, skin, gender, beard);
+    };
+    MultiplayerserviceService.prototype.loadMyCharacters = function () {
+        this.socket.emit('load-user-characters');
+    };
     MultiplayerserviceService.prototype.connectedLobby = function () {
         this.socket.emit('connected-lobby', this.roomName);
     };
@@ -994,6 +1128,81 @@ var MultiplayerserviceService = /** @class */ (function () {
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3__angular_router__["a" /* Router */]])
     ], MultiplayerserviceService);
     return MultiplayerserviceService;
+}());
+
+
+
+/***/ }),
+
+/***/ "../../../../../src/app/register/register.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/register/register.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"container-fluid\">\r\n  <form>\r\n    <p style=\"text-align: center\" class=\"display-4\">Register</p>\r\n\r\n    <div class=\"form-group\">\r\n      <label for=\"exampleInputEmail1\">Username</label>\r\n      <input [(ngModel)]=\"inputUsername\" name=\"inputUsername\" type=\"email\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\"\r\n             placeholder=\"Enter username\">\r\n      <small id=\"emailHelp\" class=\"form-text text-muted\">Your username must be unique.</small>\r\n    </div>\r\n    <div class=\"form-group\">\r\n      <label for=\"exampleInputPassword1\">Password</label>\r\n      <input *ngIf=\"inputUsername\" [(ngModel)]=\"inputPassword\" name = \"password\" type=\"password\" class=\"form-control\" id=\"exampleInputPassword1\" placeholder=\"Password\">\r\n    </div>\r\n    <div class=\"form-group\">\r\n      <input *ngIf=\"inputUsername\" [(ngModel)]=\"inputPassword2\" name = \"password2\" type=\"password\" class=\"form-control\" id=\"exampleInputPassword2\" placeholder=\"Password again\">\r\n    </div>\r\n\r\n    <button *ngIf=\"inputPassword === inputPassword2\" (click)=\"registerMe()\" type=\"button\" class=\"btn btn-primary\">Register</button>\r\n  </form>\r\n</div>\r\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/register/register.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__multiplayerservice_service__ = __webpack_require__("../../../../../src/app/multiplayerservice.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var RegisterComponent = /** @class */ (function () {
+    function RegisterComponent(multiplayer, route) {
+        this.multiplayer = multiplayer;
+        this.route = route;
+    }
+    RegisterComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.multiplayer.successfullLogin().subscribe(function () {
+            _this.route.navigateByUrl('/menu');
+        });
+        this.multiplayer.alreadyExists().subscribe(function () { });
+    };
+    RegisterComponent.prototype.registerMe = function () {
+        this.multiplayer.registerMe(this.inputUsername, this.inputPassword);
+    };
+    RegisterComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-register',
+            template: __webpack_require__("../../../../../src/app/register/register.component.html"),
+            styles: [__webpack_require__("../../../../../src/app/register/register.component.css")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__multiplayerservice_service__["a" /* MultiplayerserviceService */], __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* Router */]])
+    ], RegisterComponent);
+    return RegisterComponent;
 }());
 
 

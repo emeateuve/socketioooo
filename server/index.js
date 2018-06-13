@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+const port = process.env.PORT || 3000
 /* ######### MONGODB #########*/
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://admin:admin1!@ds155730.mlab.com:55730/guesswhomatv');
