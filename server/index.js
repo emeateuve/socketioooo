@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 /* ######### MONGODB #########*/
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://admin:admin1!@ds155730.mlab.com:55730/guesswhomatv');
@@ -43,6 +43,7 @@ var User = mongoose.model('User', userSchema);
 var emitter = require('events').EventEmitter.prototype._maxListeners = 100;
 emitter._maxListeners = 100;
 app.use(express.static('public'));
+app.use(express.static('node_modules'));
 
 /* EJEMPLO ALFONSO */
 /* app.post('/action', function(req, res){
@@ -54,9 +55,9 @@ app.use(express.static('public'));
 
 app.use(express.static('public'));
 
-// app.get('/', function(req, res){
-//   res.sendFile(__dirname + '/index.html');
-// });
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
 
 var loggedUsers = [];
 var chatUsers = [];
@@ -431,6 +432,6 @@ io.on('connection', function (socket) {
 });
 
 
-http.listen(3000, function () {
-    console.log('listening on *:3000');
+http.listen(port, function () {
+    console.log('listening on ' + port);
 });
