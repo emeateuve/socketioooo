@@ -286,7 +286,8 @@ io.on('connection', function (socket) {
                     } else {
                         userResponse.username = newUsername;
                         userResponse.save();
-                        socket.emit('changed-user-username', 'Your name has been changed successfully!')
+                        socket.jsonUser.username = newUsername;
+                        socket.emit('changed-user-username', {newName: socket.jsonUser.username, msg:'Your name has been changed successfully!'})
                     }
                 })
         });

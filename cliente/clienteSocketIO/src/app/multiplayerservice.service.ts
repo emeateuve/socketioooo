@@ -154,6 +154,7 @@ export class MultiplayerserviceService {
     return Observable.create((observer) => {
       this.socket.on('changed-user-username', (data) => {
         observer.next(data);
+        this.user = data.newName;
       });
     });
   };
