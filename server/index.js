@@ -247,7 +247,7 @@ io.on('connection', function (socket) {
                                         skin: skin,
                                         gender: gender,
                                         beard: beard,
-                                        image: './assets/userimage.jpg',
+                                        image: './assets/Paul.png',
                                         display: true,
                                         createdBy: userResponse._id,
                                         timeCreated: currentDate.toString()

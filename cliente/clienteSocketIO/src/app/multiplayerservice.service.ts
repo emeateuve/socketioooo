@@ -29,8 +29,8 @@ export class MultiplayerserviceService {
   public winner;
 
   constructor(public router: Router, public http: HttpClient) {
-    this.socket = io(this.url);
-    // this.socket = io();
+    // this.socket = io(this.url);
+    this.socket = io();
   }
 
 
