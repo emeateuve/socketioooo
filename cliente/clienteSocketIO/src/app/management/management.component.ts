@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import {Router} from "@angular/router";
 import {FormsModule, NgForm} from "@angular/forms";
+declare var jquery:any;
+declare var $ :any;
 
 @Component({
   selector: 'app-management',
@@ -35,9 +37,12 @@ export class ManagementComponent implements OnInit {
   public inputPassword3;
   public inputNewUsername;
 
+  public modalText;
+
 
   ngOnInit() {
     this.multiplayer.loadMyCharacters();
+
     this.multiplayer.loadedMyCharacters().subscribe((data) => {
       this.userCharacters = data;
     });
@@ -45,12 +50,21 @@ export class ManagementComponent implements OnInit {
       this.userCharacters = data;
     });
 
+    this.multiplayer.deletedUserCharacter().subscribe((data) => {
+      this.userCharacters = data;
+    });
+
+    this.multiplayer.oeprationMessage().subscribe((data) => {
+      this.modalText = data;
+      $('#exampleModalCenter').modal();
+    });
+
     this.multiplayer.changedUserPassword().subscribe((data) => {
-      console.log(data)
+      this.modalText = data;
+      $('#exampleModalCenter').modal();
     });
-    this.multiplayer.changedUserUsername().subscribe((data) => {
-      console.log(data)
-    });
+    this.multiplayer.changedUserUsername().subscribe((data) => {    });
+
   }
 
   changeHair(input){
@@ -73,6 +87,10 @@ export class ManagementComponent implements OnInit {
     this.multiplayer.newCharacter(this.inputName,this.inputHair, this.inputEyes, this.inputSkin, this.inputGender, this.inputBeard);
   }
 
+  deleteUserCharacter(charName){
+    this.multiplayer.deleteUserCharacter(charName);
+  }
+
   changeUserPassword(){
     this.multiplayer.changeUserPassword(this.inputCurrentPassword, this.inputPassword1);
   }
@@ -80,4 +98,6 @@ export class ManagementComponent implements OnInit {
   changeUserUsername(){
     this.multiplayer.changeUserUsername(this.inputCurrentUsername, this.inputPassword3, this.inputNewUsername);
   }
+
 }
+

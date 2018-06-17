@@ -3,6 +3,8 @@ import * as io from 'socket.io-client';
 import {Observable} from "rxjs/Observable";
 import {Router} from "@angular/router";
 
+
+
 @Injectable()
 export class MultiplayerserviceService {
   private url = 'http://localhost:3000';
@@ -134,9 +136,22 @@ export class MultiplayerserviceService {
     });
   };
 
+  public deleteUserCharacter(charName){
+    this.socket.emit('delete-user-character', charName);
+  }
+
+  public deletedUserCharacter = () => {
+    return Observable.create((observer) => {
+      this.socket.on('deleted-user-character', (data) => {
+        observer.next(data);
+      });
+    });
+  };
+
   public changeUserPassword(oldPass, newPass){
     this.socket.emit('change-user-password', oldPass, newPass);
   }
+
 
   public changedUserPassword = () => {
     return Observable.create((observer) => {
@@ -155,6 +170,14 @@ export class MultiplayerserviceService {
       this.socket.on('changed-user-username', (data) => {
         observer.next(data);
         this.user = data.newName;
+      });
+    });
+  };
+
+  public oeprationMessage = () => {
+    return Observable.create((observer) => {
+      this.socket.on('operation-message', (data) => {
+        observer.next(data);
       });
     });
   };

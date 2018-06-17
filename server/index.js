@@ -9,7 +9,7 @@ mongoose.connect('mongodb://admin:admin1!@ds155730.mlab.com:55730/guesswhomatv')
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'error de conexión: '));
 db.once('open', function () {
-    console.log('conectado suprimo a la db')
+    console.log('Connected to the database')
 });
 
 var Schema = mongoose.Schema;
@@ -118,7 +118,6 @@ io.on('connection', function (socket) {
         /* ejemplo or*/
         //.or([{username: user}, {password: user}])
             .exec(function (error, userResponse) {
-                console.log('UserResponse: ', userResponse);
                 if (userResponse === null) {
                     socket.emit('existing-user', "Password and User don't match! Try again or register");
                 } else {
@@ -178,7 +177,7 @@ io.on('connection', function (socket) {
                         })
                             .exec(function (error, userResponse) {
                                 if (userResponse === null) {
-                                    socket.emit('matrix-error', 'How did you did that?');
+                                    socket.emit('operation-message', 'Your username is corrupted. Try to login again.');
                                 } else {
                                     let charToday = new Date();
                                     let charDay = charToday.getDate();
@@ -207,7 +206,7 @@ io.on('connection', function (socket) {
                                     })
                                         .exec(function (error, userResponse) {
                                             if (userResponse === null) {
-                                                console.log('No hay usuario cargando')
+                                                socket.emit('operation-message', 'Cannot find your user. Try to login again.')
                                             } else {
                                                 Character.find({
                                                     createdBy: userResponse._id
@@ -215,9 +214,11 @@ io.on('connection', function (socket) {
                                                     .populate('createdBy')
                                                     .exec(function (error, updatedCharacters) {
                                                         if (updatedCharacters === null) {
-                                                            console.log('No se ha podido');
+                                                            socket.emit('operation-message', 'Error. Character could not be created.')
                                                         } else {
-                                                            socket.emit('updated-user-characters', updatedCharacters)
+                                                            socket.emit('updated-user-characters', updatedCharacters);
+                                                            socket.emit('operation-message', name + ' was successfully created!')
+
                                                         }
 
                                                     });
@@ -227,8 +228,7 @@ io.on('connection', function (socket) {
                             });
 
                     } else {
-                        socket.emit('existing-character', 'Hola');
-                        console.log('Existe ya ese personaje locaso');
+                        socket.emit('operation-message', name + ' already exists in our database! Try with another name.');
                     }
                 })
         });
@@ -240,7 +240,7 @@ io.on('connection', function (socket) {
             })
                 .exec(function (error, userResponse) {
                     if (userResponse === null) {
-                        console.log('No hay usuario cargando')
+                        socket.emit('operation-message', 'Cannot load your characters. Try to login again.')
                     } else {
                         Character.find({
                             createdBy: userResponse._id
@@ -248,9 +248,8 @@ io.on('connection', function (socket) {
                             .populate('createdBy')
                             .exec(function (error, charResponse) {
                                 if (charResponse === null) {
-                                    console.log('No se ha podido')
+                                    socket.emit('operation-message', 'Cannot load your characters.')
                                 } else {
-                                    // console.log(charResponse);
                                     socket.emit('loaded-user-characters', charResponse)
                                 }
 
@@ -258,6 +257,41 @@ io.on('connection', function (socket) {
                     }
                 });
         });
+
+        /* DELETE USER CHARACTER */
+
+        socket.on('delete-user-character', function (characterName) {
+            User.findOne({
+                username: socket.jsonUser.username
+            })
+                .exec(function (error, userResponse) {
+                    if (userResponse === null) {
+                        socket.emit('operation-message', 'Cannot delete ' + characterName + '. Try login again.')
+                    } else {
+                        Character.deleteOne({
+                            name: characterName
+                        })
+                            .exec(function (error, charResponse) {
+                                if (charResponse === null) {
+                                    socket.emit('operation-message', 'Cannot find ' + characterName + '. Try again.');
+                                } else {
+                                    Character.find({
+                                        createdBy: userResponse._id
+                                    })
+                                        .exec(function (error, updatedCharacters) {
+                                            if(updatedCharacters === null){
+                                                socket.emit('operation-message', 'Cannot update your characters list. Try again.');
+                                            } else {
+                                                socket.emit('deleted-user-character', updatedCharacters);
+                                                socket.emit('operation-message', 'Character removed successfully!');
+                                            }
+                                        })
+                                }
+                            });
+                    }
+                });
+        });
+
         /* CHANGE USER PASSWORD */
         socket.on('change-user-password', function (oldPass, newPass) {
             User.findOne({
@@ -266,15 +300,15 @@ io.on('connection', function (socket) {
             })
                 .exec(function (error, userResponse) {
                     if(userResponse === null){
-                        socket.emit('wrong-password', 'Your password doesnt match with the one that you typed.')
+                        socket.emit('operation-message', 'Wrong password. Try again.')
                     } else {
                         userResponse.password = newPass;
                         userResponse.save();
-                        socket.emit('changed-user-password', 'Your password has been changed successfully!')
+                        socket.emit('operation-message', 'Your password has been changed successfully!')
                     }
                 })
         });
-
+        /*  CHANGE USER USERNAME  */
         socket.on('change-user-username', function (username, password, newUsername) {
             User.findOne({
                 username: socket.jsonUser.username && username,
@@ -282,12 +316,14 @@ io.on('connection', function (socket) {
             })
                 .exec(function (error, userResponse) {
                     if(userResponse === null){
-                        socket.emit('wrong-password', 'Your password doesnt match with the one that you typed.')
+                        socket.emit('operation-message', 'Wrong password. Try again.')
                     } else {
                         userResponse.username = newUsername;
                         userResponse.save();
                         socket.jsonUser.username = newUsername;
-                        socket.emit('changed-user-username', {newName: socket.jsonUser.username, msg:'Your name has been changed successfully!'})
+                        socket.emit('changed-user-username', {newName: socket.jsonUser.username});
+                        socket.emit('operation-message', 'Your name has been changed successfully!');
+
                     }
                 })
         });
