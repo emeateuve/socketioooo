@@ -3,6 +3,58 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
+
+/* ######### MULTER ######## */
+//
+//
+// var fs = require('fs');
+// var path = require('path');
+// var multer = require('multer');
+// var multerOptions = multer.diskStorage({
+//     destination: function (req, file, callback) {
+//         callback(null, path.join(__dirname, 'customUserImages'));
+//     },
+//     filename: function (req, file, callback) {
+//         callback(null, file.originalname)
+//     }
+// })
+//
+// var upload = multer({storage: multerOptions});
+//
+// app.get('/customUserImages/:name', function (req, res) {
+//     var image = path.join(__dirname, 'customUserImages', req.params.name)
+// })
+//
+//
+// app.post('/test', function (req, res) {
+//     console.log('entra!')
+// })
+//
+// app.post('/customUserImages', upload.single('userImage'), function (req, res) {
+//     console.log('entra en el post')
+//     var name = req.file.originalname;
+//     fs.readFile(path.join(__dirname, 'customUserImages.json'), function (error, image) {
+//         if(error){
+//             console.log('ERROR: ', error)
+//         };
+//         var images = JSON.parse(image);
+//         images.push({route: name});
+//         fs.writeFile(path.join(__dirname, 'customUserImages.json'), JSON.stringify(images), function (error) {
+//             if (error){
+//                 console.log('ERROR: ', error)
+//             }
+//             res.sendFile(path.join(__dirname, 'index.html'))
+//         })
+//     })
+// });
+
+
+
+
+
+
+
+
 /* ######### MONGODB #########*/
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://admin:admin1!@ds155730.mlab.com:55730/guesswhomatv');
@@ -195,7 +247,7 @@ io.on('connection', function (socket) {
                                         skin: skin,
                                         gender: gender,
                                         beard: beard,
-                                        image: './assets/Paul.png',
+                                        image: './assets/userimage.jpg',
                                         display: true,
                                         createdBy: userResponse._id,
                                         timeCreated: currentDate.toString()

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MultiplayerserviceService} from "../multiplayerservice.service";
 import {Router} from "@angular/router";
 import {FormsModule, NgForm} from "@angular/forms";
-declare var jquery:any;
-declare var $ :any;
+import {observable} from "rxjs/symbol/observable";
+
+declare var jquery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-management',
@@ -12,7 +14,8 @@ declare var $ :any;
 })
 export class ManagementComponent implements OnInit {
 
-  constructor(public multiplayer: MultiplayerserviceService, public route: Router) { }
+  constructor(public multiplayer: MultiplayerserviceService, public route: Router) {
+  }
 
   public characterExampleHair = ['blonde', 'dark', 'red', 'bold'];
   public characterExampleEyes = ['blue', 'brown'];
@@ -39,8 +42,11 @@ export class ManagementComponent implements OnInit {
 
   public modalText;
 
+  public userImage;
+
 
   ngOnInit() {
+    // this.loadImages();
     this.multiplayer.loadMyCharacters();
 
     this.multiplayer.loadedMyCharacters().subscribe((data) => {
@@ -63,41 +69,63 @@ export class ManagementComponent implements OnInit {
       this.modalText = data;
       $('#exampleModalCenter').modal();
     });
-    this.multiplayer.changedUserUsername().subscribe((data) => {    });
+    this.multiplayer.changedUserUsername().subscribe((data) => {
+    });
 
   }
 
-  changeHair(input){
+  changeHair(input) {
     this.inputHair = input;
   }
-  changeEyes(input){
+
+  changeEyes(input) {
     this.inputEyes = input;
   }
-  changeSkin(input){
+
+  changeSkin(input) {
     this.inputSkin = input;
   }
-  changeGender(input){
+
+  changeGender(input) {
     this.inputGender = input;
   }
-  changeBeard(input){
+
+  changeBeard(input) {
     this.inputBeard = input;
   }
 
-  createCharacter(){
-    this.multiplayer.newCharacter(this.inputName,this.inputHair, this.inputEyes, this.inputSkin, this.inputGender, this.inputBeard);
+  createCharacter() {
+    this.multiplayer.newCharacter(this.inputName, this.inputHair, this.inputEyes, this.inputSkin, this.inputGender, this.inputBeard);
   }
 
-  deleteUserCharacter(charName){
+  deleteUserCharacter(charName) {
     this.multiplayer.deleteUserCharacter(charName);
   }
 
-  changeUserPassword(){
+  changeUserPassword() {
     this.multiplayer.changeUserPassword(this.inputCurrentPassword, this.inputPassword1);
   }
 
-  changeUserUsername(){
+  changeUserUsername() {
     this.multiplayer.changeUserUsername(this.inputCurrentUsername, this.inputPassword3, this.inputNewUsername);
   }
+
+  // loadImages() {
+  //   $.ajax({
+  //     url: '/customUserImages'
+  //   }).done(function (images) {
+  //     images.forEach(function (image) {
+  //       console.log(image)
+  //     })
+  //   })
+  // }
+
+  // uploadImage(){
+  //   console.log(this.userImage);
+  //   this.multiplayer.uploadImage().subscribe((data) => {
+  //     console.log(data)
+  //   });
+  // }
 
 }
 

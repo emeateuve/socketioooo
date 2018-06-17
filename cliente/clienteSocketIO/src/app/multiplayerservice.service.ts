@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
 import {Observable} from "rxjs/Observable";
 import {Router} from "@angular/router";
-
+import {HttpClient} from "@angular/common/http";
 
 
 @Injectable()
@@ -28,7 +28,7 @@ export class MultiplayerserviceService {
   public resultGame = 'ingame';
   public winner;
 
-  constructor(public router: Router) {
+  constructor(public router: Router, public http: HttpClient) {
     this.socket = io(this.url);
     // this.socket = io();
   }
@@ -182,6 +182,9 @@ export class MultiplayerserviceService {
     });
   };
 
+  // public uploadImage(image): Observable<any>{
+  //   return this.http.post(this.url + '/customUserImage', image)
+  // }
 
   /*                              GAME LOBBY                                     */
   public roomIsFull = () => {

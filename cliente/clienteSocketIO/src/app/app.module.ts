@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { MenuComponent } from './menu/menu.component';
 import { GlobalChatComponent } from './global-chat/global-chat.component';
+import {HttpClientModule} from "@angular/common/http";
 
 import {Routes, Router, RouterModule} from "@angular/router";
 import { HeaderComponent } from './header/header.component';
@@ -41,6 +42,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes, {enableTracing: false})
   ],
